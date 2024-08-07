@@ -1,7 +1,10 @@
+import Quizz from "./components/quizz"
+import EuropeFR from "./data/FR/europe.json"
+
 function App() {
 	return (
 		<>
-			<div>Hello World </div>
+			<Quizz countriesList={EuropeFR} />
 		</>
 	)
 }
