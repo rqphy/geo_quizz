@@ -1,0 +1,28 @@
+[
+	{ "country_name": "Antigua and Barbuda", "capital_name": "Saint John's" },
+	{ "country_name": "Bahamas", "capital_name": "Nassau" },
+	{ "country_name": "Barbados", "capital_name": "Bridgetown" },
+	{ "country_name": "Belize", "capital_name": "Belmopan" },
+	{ "country_name": "Canada", "capital_name": "Ottawa" },
+	{ "country_name": "Costa Rica", "capital_name": "San José" },
+	{ "country_name": "Cuba", "capital_name": "Havana" },
+	{ "country_name": "Dominica", "capital_name": "Roseau" },
+	{ "country_name": "Dominican Republic", "capital_name": "Santo Domingo" },
+	{ "country_name": "El Salvador", "capital_name": "San Salvador" },
+	{ "country_name": "Grenada", "capital_name": "Saint George's" },
+	{ "country_name": "Guatemala", "capital_name": "Guatemala City" },
+	{ "country_name": "Haiti", "capital_name": "Port-au-Prince" },
+	{ "country_name": "Honduras", "capital_name": "Tegucigalpa" },
+	{ "country_name": "Jamaica", "capital_name": "Kingston" },
+	{ "country_name": "Mexico", "capital_name": "Mexico City" },
+	{ "country_name": "Nicaragua", "capital_name": "Managua" },
+	{ "country_name": "Panama", "capital_name": "Panama City" },
+	{ "country_name": "Saint Kitts and Nevis", "capital_name": "Basseterre" },
+	{ "country_name": "Saint Lucia", "capital_name": "Castries" },
+	{
+		"country_name": "Saint Vincent and the Grenadines",
+		"capital_name": "Kingstown"
+	},
+	{ "country_name": "Trinidad and Tobago", "capital_name": "Port of Spain" },
+	{ "country_name": "United States", "capital_name": "Washington, D.C." }
+]

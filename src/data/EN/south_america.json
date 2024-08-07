@@ -1,0 +1,14 @@
+[
+	{ "country_name": "Argentina", "capital_name": "Buenos Aires" },
+	{ "country_name": "Bolivia", "capital_name": "Sucre" },
+	{ "country_name": "Brazil", "capital_name": "Brasília" },
+	{ "country_name": "Chile", "capital_name": "Santiago" },
+	{ "country_name": "Colombia", "capital_name": "Bogotá" },
+	{ "country_name": "Ecuador", "capital_name": "Quito" },
+	{ "country_name": "Guyana", "capital_name": "Georgetown" },
+	{ "country_name": "Paraguay", "capital_name": "Asunción" },
+	{ "country_name": "Peru", "capital_name": "Lima" },
+	{ "country_name": "Suriname", "capital_name": "Paramaribo" },
+	{ "country_name": "Uruguay", "capital_name": "Montevideo" },
+	{ "country_name": "Venezuela", "capital_name": "Caracas" }
+]
