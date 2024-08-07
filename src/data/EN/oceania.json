@@ -1,0 +1,16 @@
+[
+	{ "country_name": "Australia", "capital_name": "Canberra" },
+	{ "country_name": "Fiji", "capital_name": "Suva" },
+	{ "country_name": "Kiribati", "capital_name": "Tarawa" },
+	{ "country_name": "Marshall Islands", "capital_name": "Majuro" },
+	{ "country_name": "Micronesia", "capital_name": "Palikir" },
+	{ "country_name": "Nauru", "capital_name": "Yaren District (de facto)" },
+	{ "country_name": "New Zealand", "capital_name": "Wellington" },
+	{ "country_name": "Palau", "capital_name": "Ngerulmud" },
+	{ "country_name": "Papua New Guinea", "capital_name": "Port Moresby" },
+	{ "country_name": "Samoa", "capital_name": "Apia" },
+	{ "country_name": "Solomon Islands", "capital_name": "Honiara" },
+	{ "country_name": "Tonga", "capital_name": "Nuku'alofa" },
+	{ "country_name": "Tuvalu", "capital_name": "Funafuti" },
+	{ "country_name": "Vanuatu", "capital_name": "Port Vila" }
+]
