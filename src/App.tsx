@@ -1,10 +1,12 @@
 import Quizz from "./components/quizz"
 import EuropeFR from "./data/FR/europe.json"
+import Question from "./components/question"
 
 function App() {
 	return (
 		<>
-			<Quizz countriesList={EuropeFR} />
+			<Question gamemode="findCountry" label="Tokyo" />
+			{/* <Quizz countriesList={EuropeFR} /> */}
 		</>
 	)
 }

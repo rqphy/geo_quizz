@@ -1,0 +1,10 @@
+[
+	{
+		"gamemode": "findCountry",
+		"label": "test"
+	},
+	{
+		"gamemode": "findCapital",
+		"label": "test2"
+	}
+]

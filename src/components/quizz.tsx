@@ -1,10 +1,10 @@
-import { Country } from "../interfaces"
+import { ICountry } from "../types/interfaces"
 
-interface QuizzProps {
-	countriesList: Country[]
+interface IQuizzProps {
+	countriesList: ICountry[]
 }
 
-export default function Quizz({ countriesList }: QuizzProps) {
+export default function Quizz({ countriesList }: IQuizzProps) {
 	return (
 		<div>
 			{countriesList.map((country) => (
