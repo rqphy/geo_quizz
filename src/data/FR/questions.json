@@ -5,6 +5,6 @@
 	},
 	{
 		"gamemode": "findCapital",
-		"label": ["Quelle est la capitale de", "?"]
+		"label": ["Quelle est la capitale de ce pays :", "?"]
 	}
 ]

@@ -5,7 +5,7 @@ import Question from "./components/question"
 function App() {
 	return (
 		<>
-			<Question gamemode="findCountry" label="Tokyo" />
+			<Question gamemode="findCapital" roundLabel="Japon" />
 			{/* <Quizz countriesList={EuropeFR} /> */}
 		</>
 	)
