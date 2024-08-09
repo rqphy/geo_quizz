@@ -5,10 +5,10 @@
 	{ "country_name": "Îles Marshall", "capital_name": "Majuro" },
 	{ "country_name": "Micronésie", "capital_name": "Palikir" },
 	{ "country_name": "Nauru", "capital_name": "District de Yaren (de facto)" },
-	{ "country_name": "Nouvelle-Zélande", "capital_name": "Wellington" },
+	{ "country_name": "Nouvelle Zélande", "capital_name": "Wellington" },
 	{ "country_name": "Palaos", "capital_name": "Ngerulmud" },
 	{
-		"country_name": "Papouasie-Nouvelle-Guinée",
+		"country_name": "Papouasie Nouvelle Guinée",
 		"capital_name": "Port Moresby"
 	},
 	{ "country_name": "Samoa", "capital_name": "Apia" },
