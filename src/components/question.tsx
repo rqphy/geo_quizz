@@ -6,6 +6,7 @@ function interpolateQuestion(
 	questionLabel: string[],
 	roundLabel: string
 ): string {
+	// console.log(questionLabel, roundLabel)
 	return [questionLabel[0], roundLabel, ...questionLabel.slice(1)].join(" ")
 }
 
@@ -22,7 +23,7 @@ export default function Question({ gamemode, roundLabel }: IQuestionProps) {
 			(question) => question.gamemode === gamemode
 		)?.label ?? [""]
 		setQuestion(interpolateQuestion(questionLabel, roundLabel))
-	}, [])
+	}, [roundLabel])
 
 	return <p>{question}</p>
 }

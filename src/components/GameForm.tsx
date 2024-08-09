@@ -5,7 +5,6 @@ function removeAccents(str: string): string {
 }
 
 function checkAnswer(expectedAnswer: string, answer: string): boolean {
-	console.log(answer)
 	if (!answer) return false
 	expectedAnswer = removeAccents(expectedAnswer).toLowerCase()
 	answer = removeAccents(answer).toLowerCase()
@@ -27,8 +26,10 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 
 		if (checkAnswer(expectedAnswer, inputValue)) {
 			// tada + next round + player point
+			console.log("YEAH")
 		} else {
 			// emit answer
+			console.log("NOPE")
 		}
 
 		// Clear input
