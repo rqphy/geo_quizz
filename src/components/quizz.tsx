@@ -22,7 +22,7 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 			setQuestionLabel(countriesList[countryId].capital_name)
 			setExpectedAnswer(countriesList[countryId].country_name)
 		}
-	}, [countryId])
+	}, [countryId, gamemode])
 
 	return (
 		<div>
