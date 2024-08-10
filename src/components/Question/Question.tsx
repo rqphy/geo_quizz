@@ -1,5 +1,5 @@
-import { Gamemode } from "../types/types"
-import Questions from "../data/FR/questions.json"
+import { Gamemode } from "../../types/types"
+import Questions from "../../data/FR/questions.json"
 
 function interpolateQuestion(
 	questionLabel: string[],

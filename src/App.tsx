@@ -1,6 +1,5 @@
-import Quizz from "./components/Quizz"
+import Quizz from "./components/Quizz/Quizz"
 import EuropeFR from "./data/FR/europe.json"
-
 
 function App() {
 	return (

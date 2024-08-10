@@ -1,8 +1,9 @@
 import { ICountry } from "../types/interfaces"
 import { Gamemode } from "../types/types"
-import Question from "./Question"
-import GameForm from "./GameForm"
+import Question from "../Question/Question"
+import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
+import "./quizz.scss"
 
 interface IQuizzProps {
 	countriesList: ICountry[]
@@ -25,7 +26,7 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 	}, [countryId, gamemode])
 
 	return (
-		<div>
+		<div className="quizz">
 			<Question gamemode={gamemode} roundLabel={questionLabel} />
 			<GameForm expectedAnswer={expectedAnswer} />
 		</div>
