@@ -1,10 +1,10 @@
 [
 	{
 		"gamemode": "findCountry",
-		"label": ["De quel pays", "est la capitale?"]
+		"label": "À quel pays appartient cette capitale ?"
 	},
 	{
 		"gamemode": "findCapital",
-		"label": ["Quelle est la capitale de ce pays :", "?"]
+		"label": "Quelle est la capitale de ce pays ?"
 	}
 ]

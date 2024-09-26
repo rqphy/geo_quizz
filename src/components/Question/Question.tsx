@@ -1,12 +1,6 @@
 import { Gamemode } from "../../types/types"
 import Questions from "../../data/FR/questions.json"
-
-function interpolateQuestion(
-	questionLabel: string[],
-	roundLabel: string
-): string {
-	return [questionLabel[0], roundLabel, ...questionLabel.slice(1)].join(" ")
-}
+import "./question.scss"
 
 interface IQuestionProps {
 	gamemode: Gamemode
@@ -14,11 +8,14 @@ interface IQuestionProps {
 }
 
 export default function Question({ gamemode, roundLabel }: IQuestionProps) {
+	let questionLabel: string =
+		Questions.find((question) => question.gamemode === gamemode)?.label ??
+		""
 
-	let questionLabel: string[] = Questions.find(
-		(question) => question.gamemode === gamemode
-	)?.label ?? [""]
-	let question = interpolateQuestion(questionLabel, roundLabel)
-
-	return <p>{question}</p>
+	return (
+		<section className="question">
+			<p className="question__label">{questionLabel}</p>
+			<p className="question__round">{roundLabel}</p>
+		</section>
+	)
 }

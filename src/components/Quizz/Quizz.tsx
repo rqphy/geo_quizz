@@ -1,5 +1,5 @@
-import { ICountry } from "../types/interfaces"
-import { Gamemode } from "../types/types"
+import { ICountry } from "../../types/interfaces"
+import { Gamemode } from "../../types/types"
 import Question from "../Question/Question"
 import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
