@@ -1,0 +1,17 @@
+.button {
+	height: 2rem;
+	padding: 0.2rem 3rem;
+	border: none;
+	border-radius: 50px;
+	background-color: var(--color-primary);
+	color: var(--color-light);
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		background-color: var(--color-tertiary);
+		color: var(--color-primary);
+		transform: scale(1.1);
+	}
+}

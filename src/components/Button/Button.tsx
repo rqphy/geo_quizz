@@ -1,7 +1,9 @@
+import "./button.scss"
+
 interface IButtonProps {
 	label: string
 }
 
 export default function Button({ label }: IButtonProps) {
-	return <button>{label}</button>
+	return <button className="button">{label}</button>
 }
