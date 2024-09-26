@@ -1,7 +1,7 @@
 interface IButtonProps {
-    label: string
+	label: string
 }
 
 export default function Button({ label }: IButtonProps) {
-    return <button>{ label }</button>
+	return <button>{label}</button>
 }

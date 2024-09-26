@@ -1,4 +1,5 @@
 import Button from "../Button/Button"
+import "./gameform.scss"
 
 function removeAccents(str: string): string {
 	return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -37,8 +38,13 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<input type="text" placeholder="Répondre ici..." />
+		<form onSubmit={handleSubmit} className="gameform">
+			<input
+				type="text"
+				placeholder="Répondre ici..."
+				className="gameform__answer"
+				autoFocus
+			/>
 			<Button label="Valider" />
 		</form>
 	)

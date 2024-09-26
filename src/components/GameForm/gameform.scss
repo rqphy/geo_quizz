@@ -1,0 +1,14 @@
+.gameform {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	&__answer {
+		width: 500px;
+		height: 3rem;
+		font-size: 1.2rem;
+		border-radius: 50px;
+		border: none;
+		padding: 1rem;
+	}
+}
