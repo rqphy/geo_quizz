@@ -1,5 +1,6 @@
 import Button from "../Button/Button"
 import useRoundCountStore from "../../stores/roundCount"
+import { useState } from "react"
 import "./gameform.scss"
 
 function removeAccents(str: string): string {
@@ -20,6 +21,12 @@ interface IGameFormProps {
 
 export default function GameForm({ expectedAnswer }: IGameFormProps) {
 	const increaseRoundCount = useRoundCountStore((state) => state.increase)
+	const [isAnimating, setIsAnimating] = useState<boolean>(false)
+
+	function startFailAnimation(): void {
+		setIsAnimating(false)
+		setTimeout(() => setIsAnimating(true), 0)
+	}
 
 	function handleSubmit(_event: React.FormEvent<HTMLFormElement>) {
 		_event.preventDefault()
@@ -34,6 +41,7 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 			console.log("YEAH")
 		} else {
 			// emit answer
+			startFailAnimation()
 			console.log("NOPE")
 		}
 
@@ -46,7 +54,7 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 			<input
 				type="text"
 				placeholder="Répondre ici..."
-				className="gameform__answer"
+				className={isAnimating ? "gameform__animated" : ""}
 				autoFocus
 			/>
 			<Button label="Valider" />

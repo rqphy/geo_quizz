@@ -4,12 +4,37 @@
 	align-items: center;
 	gap: 1rem;
 
-	&__answer {
+	input {
 		width: 500px;
 		height: 3rem;
 		font-size: 1.2rem;
 		border-radius: 50px;
 		border: none;
 		padding: 1rem;
+	}
+
+	&__animated {
+		animation: shaking 0.3s ease-in-out forwards;
+	}
+
+	@keyframes shaking {
+		0% {
+			transform: rotate(0deg);
+			background-color: var(--color-denied);
+		}
+		25% {
+			transform: rotate(5deg);
+		}
+		50% {
+			transform: rotate(0eg);
+		}
+		75% {
+			transform: rotate(-5deg);
+			background-color: var(--color-denied);
+		}
+		100% {
+			transform: rotate(0deg);
+			background-color: var(--color-light);
+		}
 	}
 }
