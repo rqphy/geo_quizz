@@ -3,7 +3,7 @@ import { Gamemode } from "../../types/types"
 import Question from "../Question/Question"
 import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
-import useRoundCountStore from '../../stores/roundCount'
+import useRoundCountStore from "../../stores/roundCount"
 import "./quizz.scss"
 
 interface IQuizzProps {
@@ -26,6 +26,11 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 			setExpectedAnswer(countriesList[countryId].country_name)
 		}
 	}, [countryId, gamemode])
+
+	useEffect(() => {
+		setCountryId(Math.round(Math.random() * countriesList.length))
+		setGamemode(Math.random() > 0.5 ? 'findCapital' : 'findCountry')
+	}, [roundCount])
 
 	return (
 		<div className="quizz">
