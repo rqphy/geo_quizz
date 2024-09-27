@@ -1,4 +1,5 @@
 import Button from "../Button/Button"
+import useRoundCountStore from "../../stores/roundCount"
 import "./gameform.scss"
 
 function removeAccents(str: string): string {
@@ -18,6 +19,8 @@ interface IGameFormProps {
 }
 
 export default function GameForm({ expectedAnswer }: IGameFormProps) {
+	const increaseRoundCount = useRoundCountStore((state) => state.increase)
+
 	function handleSubmit(_event: React.FormEvent<HTMLFormElement>) {
 		_event.preventDefault()
 
@@ -27,6 +30,7 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 
 		if (checkAnswer(expectedAnswer, inputValue)) {
 			// tada + next round + player point
+			increaseRoundCount()
 			console.log("YEAH")
 		} else {
 			// emit answer
