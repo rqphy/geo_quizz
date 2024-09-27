@@ -6,6 +6,6 @@ interface IRoundCount {
 }
 
 export default create<IRoundCount>()((set) => ({
-	roundCount: 0,
+	roundCount: 1,
 	increase: () => set((state) => ({ roundCount: state.roundCount + 1 })),
 }))
