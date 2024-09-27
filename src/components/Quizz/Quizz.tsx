@@ -14,6 +14,7 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 	const [gamemode, setGamemode] = useState<Gamemode>("findCountry")
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
+	const [roundCount, setRoundCount] = useState<number>(0)
 
 	useEffect(() => {
 		if (gamemode === "findCapital") {
@@ -27,6 +28,7 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 
 	return (
 		<div className="quizz">
+			<p className="quizz__roundCount">Round : {roundCount}</p>
 			<Question gamemode={gamemode} roundLabel={questionLabel} />
 			<GameForm expectedAnswer={expectedAnswer} />
 		</div>
