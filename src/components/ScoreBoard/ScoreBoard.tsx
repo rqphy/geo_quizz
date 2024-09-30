@@ -5,6 +5,7 @@ interface IScoreBoardProps {
 }
 
 export default function ScoreBoard({ playerList }: IScoreBoardProps) {
+    // sort playerlist by player score from high to low
 	playerList.sort((a, b) => b.score - a.score)
 
 	return (
