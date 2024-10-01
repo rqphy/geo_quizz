@@ -16,7 +16,9 @@ export default function Game() {
 	return (
 		<section className="game">
 			<Quizz countriesList={EuropeFR} />
-			<ScoreBoard playerList={fakePlayerList} />
+			{fakePlayerList.length > 1 && (
+				<ScoreBoard playerList={fakePlayerList} />
+			)}
 		</section>
 	)
 }
