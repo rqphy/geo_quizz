@@ -18,7 +18,6 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 	const roundCount = useRoundCountStore((state) => state.roundCount)
 
 	useEffect(() => {
-		console.log(countryId, countriesList)
 		if (gamemode === "findCapital") {
 			setQuestionLabel(countriesList[countryId].country_name)
 			setExpectedAnswer(countriesList[countryId].capital_name)
@@ -29,7 +28,15 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 	}, [countryId, gamemode])
 
 	useEffect(() => {
-		setCountryId(Math.round(Math.random() * (countriesList.length - 1)))
+		let newCountryId = Math.round(
+			Math.random() * (countriesList.length - 1)
+		)
+
+		if (newCountryId === countryId) {
+			newCountryId++
+		}
+
+		setCountryId(newCountryId)
 		setGamemode(Math.random() > 0.5 ? "findCapital" : "findCountry")
 	}, [roundCount])
 
