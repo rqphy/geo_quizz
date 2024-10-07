@@ -1,7 +1,8 @@
+import { useParams } from "react-router-dom"
 import Quizz from "../../components/Quizz/Quizz"
 import ScoreBoard from "../../components/ScoreBoard/ScoreBoard"
 import EuropeFR from "../../data/FR/europe.json"
-import "./game.scss"
+import "./multiplayer.scss"
 
 const fakePlayerList = [
 	{ name: "toto", score: 12 },
@@ -12,7 +13,10 @@ const fakePlayerList = [
 	{ name: "SavteSavteSavte", score: 8 },
 ]
 
-export default function Game() {
+export default function MultiPlayer() {
+	let params = useParams()
+	console.log(params.roomId)
+
 	return (
 		<section className="game">
 			<Quizz countriesList={EuropeFR} />
