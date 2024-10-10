@@ -1,0 +1,26 @@
+[
+	{
+		"label": "Africa",
+		"slug": "AF"
+	},
+	{
+		"label": "Asia",
+		"slug": "AS"
+	},
+	{
+		"label": "Europe",
+		"slug": "EU"
+	},
+	{
+		"label": "North America",
+		"slug": "NA"
+	},
+	{
+		"label": "South America",
+		"slug": "SA"
+	},
+	{
+		"label": "Oceania",
+		"slug": "OC"
+	}
+]
