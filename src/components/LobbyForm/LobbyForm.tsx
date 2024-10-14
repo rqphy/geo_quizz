@@ -35,16 +35,18 @@ export default function LobbyForm() {
 	}
 
 	return (
-		<form>
-			<div className="checkall">
+		<form className="lobbyform">
+			<label className="lobbyform__option lobbyform--checkall">
 				<input
 					type="checkbox"
 					id="checkall"
 					checked={checkAll}
 					onChange={handleCheckAll}
 				/>
-				<label htmlFor="checkall">Monde</label>
-			</div>
+				<div className="option__background"></div>
+
+				<span>Monde</span>
+			</label>
 			{items.map((item) => (
 				<CheckInput
 					key={item.slug}

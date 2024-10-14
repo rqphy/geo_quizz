@@ -12,14 +12,15 @@ export default function CheckInput({
 	onChange,
 }: ICheckInput) {
 	return (
-		<div>
+		<label className="lobbyform__option">
 			<input
 				type="checkbox"
 				id={slug}
 				checked={checked}
 				onChange={onChange}
 			/>
-			<label htmlFor={slug}>{label}</label>
-		</div>
+			<div className="option__background"></div>
+			<span>{label}</span>
+		</label>
 	)
 }
