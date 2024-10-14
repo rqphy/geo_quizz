@@ -4,7 +4,7 @@ import AsiaFR from "../../data/FR/asia.json"
 import NorthAmericaFR from "../../data/FR/north_america.json"
 import SouthAmericaFR from "../../data/FR/south_america.json"
 import OceaniaFR from "../../data/FR/oceania.json"
-import './lobby.scss'
+import "./lobby.scss"
 import Lobbyform from "../../components/LobbyForm/LobbyForm"
 import ScoreBoard from "../../components/ScoreBoard/ScoreBoard"
 import Quizz from "../../components/Quizz/Quizz"
@@ -21,7 +21,7 @@ const fakePlayerList = [
 export default function Lobby() {
 	return (
 		<section className="lobby">
-
+			<h1>Créez votre quizz:</h1>
 			<Lobbyform />
 			{fakePlayerList.length > 1 && (
 				<ScoreBoard playerList={fakePlayerList} />
