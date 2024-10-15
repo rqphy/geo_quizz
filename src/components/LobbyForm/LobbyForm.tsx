@@ -2,6 +2,7 @@ import "./lobbyform.scss"
 import CheckInput from "./CheckInput"
 import continentsList from "../../data/FR/continents.json"
 import { useState } from "react"
+import Button from "../Button/Button"
 
 export default function LobbyForm() {
 	const [checkAll, setCheckAll] = useState<boolean>(false)
@@ -34,6 +35,11 @@ export default function LobbyForm() {
 		setCheckAll(allChecked)
 	}
 
+	const handleInvite = (_event: any) => {
+		_event.preventDefault()
+		console.log("invite")
+	}
+
 	return (
 		<form className="lobbyform">
 			<label className="lobbyform__option lobbyform--checkall">
@@ -58,6 +64,8 @@ export default function LobbyForm() {
 					}
 				/>
 			))}
+			<Button label="Jouer" />
+			<Button label="Inviter" className="invite" onClick={handleInvite} />
 		</form>
 	)
 }
