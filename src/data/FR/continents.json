@@ -8,16 +8,16 @@
 		"slug": "AS"
 	},
 	{
-		"label": "Europe",
-		"slug": "EU"
-	},
-	{
 		"label": "Amérique du Nord",
 		"slug": "NA"
 	},
 	{
 		"label": "Amérique du Sud",
 		"slug": "SA"
+	},
+	{
+		"label": "Europe",
+		"slug": "EU"
 	},
 	{
 		"label": "Océanie",
