@@ -33,10 +33,10 @@ const fakePlayerList = [
 
 export default function Lobby() {
 	const [playerUsername, setPlayerUsername] = useState<string | null>()
+	const [coutriesList, setCountriesList] = useState<ICountry[]>([])
 
 	function handleUsernameSubmit(_event: FormEvent<HTMLFormElement>): void {
 		_event.preventDefault()
-		console.log(new FormData(_event.currentTarget))
 		const submittedName = new FormData(_event.currentTarget).get("username")
 		// TODO : CHECK USERNAME
 		let username: string = submittedName?.toString() ?? "Toto"
@@ -46,24 +46,28 @@ export default function Lobby() {
 	function handlePartySubmit(_event: FormEvent<HTMLFormElement>): void {
 		_event.preventDefault()
 		const submittedContinentList = new FormData(_event.currentTarget)
-		const countriesList: ICountry[] = []
+		const tempCountriesList: ICountry[] = []
 		for (const key of [...submittedContinentList.keys()]) {
-			countriesList.push(...continentsData[key as Region])
+			tempCountriesList.push(...continentsData[key as Region])
 		}
-		console.log(countriesList)
+		setCountriesList(tempCountriesList)
 	}
 
 	function renderContent() {
 		if (playerUsername) {
-			return (
-				<>
-					<section className="lobby__creation">
-						<h2>Créez votre quizz:</h2>
-						<Lobbyform onSubmit={handlePartySubmit} />
-					</section>
-					<ScoreBoard playerList={fakePlayerList} />
-				</>
-			)
+			if (coutriesList.length > 1) {
+				return <Quizz countriesList={coutriesList} />
+			} else {
+				return (
+					<>
+						<section className="lobby__creation">
+							<h2>Créez votre quizz:</h2>
+							<Lobbyform onSubmit={handlePartySubmit} />
+						</section>
+						<ScoreBoard playerList={fakePlayerList} />
+					</>
+				)
+			}
 		} else {
 			return (
 				<section className="lobby__name">
