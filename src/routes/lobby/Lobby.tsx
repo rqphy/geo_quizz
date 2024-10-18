@@ -56,7 +56,12 @@ export default function Lobby() {
 	function renderContent() {
 		if (playerUsername) {
 			if (coutriesList.length > 1) {
-				return <Quizz countriesList={coutriesList} />
+				return (
+					<>
+						<Quizz countriesList={coutriesList} />
+						<ScoreBoard playerList={fakePlayerList} />
+					</>
+				)
 			} else {
 				return (
 					<>
