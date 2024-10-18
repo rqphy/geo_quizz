@@ -16,6 +16,7 @@ export default function CheckInput({
 			<input
 				type="checkbox"
 				id={slug}
+				name={slug}
 				checked={checked}
 				onChange={onChange}
 			/>

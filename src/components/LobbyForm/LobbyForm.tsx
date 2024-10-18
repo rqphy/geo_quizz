@@ -1,10 +1,14 @@
 import "./lobbyform.scss"
 import CheckInput from "./CheckInput"
 import continentsList from "../../data/FR/continents.json"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import Button from "../Button/Button"
 
-export default function LobbyForm() {
+interface ILobbyForm {
+	onSubmit: (_event: FormEvent<HTMLFormElement>) => void
+}
+
+export default function LobbyForm({ onSubmit }: ILobbyForm) {
 	const [checkAll, setCheckAll] = useState<boolean>(false)
 	const [items, setItems] = useState(
 		continentsList.map((continent) => ({
@@ -41,7 +45,7 @@ export default function LobbyForm() {
 	}
 
 	return (
-		<form className="lobbyform">
+		<form className="lobbyform" onSubmit={onSubmit}>
 			<label className="lobbyform__option lobbyform--checkall">
 				<input
 					type="checkbox"
