@@ -5,7 +5,7 @@ import NorthAmericaFR from "../../data/FR/north_america.json"
 import SouthAmericaFR from "../../data/FR/south_america.json"
 import OceaniaFR from "../../data/FR/oceania.json"
 import "./lobby.scss"
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import Lobbyform from "../../components/LobbyForm/LobbyForm"
 import ScoreBoard from "../../components/ScoreBoard/ScoreBoard"
 import Quizz from "../../components/Quizz/Quizz"
@@ -23,6 +23,14 @@ const fakePlayerList = [
 export default function Lobby() {
 	const [playerUsername, setPlayerUsername] = useState<string | null>()
 
+	function handleUsernameSubmit(_event: FormEvent<HTMLFormElement>): void {
+		_event.preventDefault()
+		const submittedName = new FormData(_event.currentTarget).get("username")
+		// TODO : CHECK USERNAME
+		let username: string = submittedName?.toString() ?? "Toto"
+		setPlayerUsername(username)
+	}
+
 	function renderContent() {
 		if (playerUsername) {
 			return (
@@ -38,7 +46,7 @@ export default function Lobby() {
 			return (
 				<section className="lobby__name">
 					<h2>Choisissez un nom:</h2>
-					<UsernameForm />
+					<UsernameForm onSubmit={handleUsernameSubmit} />
 				</section>
 			)
 		}
