@@ -5,9 +5,11 @@ import NorthAmericaFR from "../../data/FR/north_america.json"
 import SouthAmericaFR from "../../data/FR/south_america.json"
 import OceaniaFR from "../../data/FR/oceania.json"
 import "./lobby.scss"
+import { useState } from "react"
 import Lobbyform from "../../components/LobbyForm/LobbyForm"
 import ScoreBoard from "../../components/ScoreBoard/ScoreBoard"
 import Quizz from "../../components/Quizz/Quizz"
+import UsernameForm from "../../components/UsernameForm/UsernameForm"
 
 const fakePlayerList = [
 	{ name: "toto", score: 12 },
@@ -19,13 +21,28 @@ const fakePlayerList = [
 ]
 
 export default function Lobby() {
-	return (
-		<section className="lobby">
-			<h1>Créez votre quizz:</h1>
-			<Lobbyform />
-			{fakePlayerList.length > 1 && (
-				<ScoreBoard playerList={fakePlayerList} />
-			)}
-		</section>
-	)
+	const [playerUsername, setPlayerUsername] = useState<string | null>()
+
+	function renderContent() {
+		if (playerUsername) {
+			return (
+				<>
+					<section className="lobby__creation">
+						<h2>Créez votre quizz:</h2>
+						<Lobbyform />
+					</section>
+					<ScoreBoard playerList={fakePlayerList} />
+				</>
+			)
+		} else {
+			return (
+				<section className="lobby__name">
+					<h2>Choisissez un nom:</h2>
+					<UsernameForm />
+				</section>
+			)
+		}
+	}
+
+	return <section className="lobby">{renderContent()}</section>
 }
