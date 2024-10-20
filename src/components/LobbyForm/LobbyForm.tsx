@@ -10,6 +10,7 @@ interface ILobbyForm {
 
 export default function LobbyForm({ onSubmit }: ILobbyForm) {
 	const [checkAll, setCheckAll] = useState<boolean>(false)
+	const [noneChecked, setNoneChecked] = useState<boolean>(true)
 	const [items, setItems] = useState(
 		continentsList.map((continent) => ({
 			...continent,
@@ -37,6 +38,9 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 
 		const allChecked = updatedItems.every((item) => item.checked)
 		setCheckAll(allChecked)
+
+		const someChecked = updatedItems.some((item) => item.checked)
+		setNoneChecked(!someChecked)
 	}
 
 	const handleInvite = (_event: any) => {
@@ -68,7 +72,7 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 					}
 				/>
 			))}
-			<Button label="Jouer" />
+			<Button label="Jouer" className={noneChecked && "disabled"} />
 			<Button label="Inviter" className="invite" onClick={handleInvite} />
 		</form>
 	)
