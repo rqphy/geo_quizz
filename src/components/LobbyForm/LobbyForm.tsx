@@ -72,7 +72,7 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 					}
 				/>
 			))}
-			<Button label="Jouer" className={noneChecked && "disabled"} />
+			<Button label="Jouer" className={`${noneChecked && "disabled"}`} />
 			<Button label="Inviter" className="invite" onClick={handleInvite} />
 		</form>
 	)
