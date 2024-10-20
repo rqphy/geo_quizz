@@ -6,7 +6,7 @@
 
 	&__text {
 		height: 3rem;
-		width: 100%;
+		width: 300px;
 		font-size: 1rem;
 		border-radius: 50px;
 		border: none;
@@ -15,5 +15,26 @@
 
 	&__button {
 		width: 200px;
+	}
+
+	&__error {
+		color: var(--color-error);
+	}
+
+	&.error {
+		.username__text {
+			border: 2px solid var(--color-error);
+		}
+
+		.username__button {
+			background-color: var(--color-grey);
+			cursor: not-allowed;
+
+			&:hover {
+				background-color: var(--color-grey);
+				color: var(--color-light);
+				transform: none;
+			}
+		}
 	}
 }
