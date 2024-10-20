@@ -56,6 +56,7 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 				placeholder="Répondre ici..."
 				className={isAnimating ? "gameform__animated" : ""}
 				autoFocus
+				required
 			/>
 			<Button label="Valider" />
 		</form>
