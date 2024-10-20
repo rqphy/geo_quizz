@@ -11,6 +11,11 @@
 		border-radius: 50px;
 		border: none;
 		padding: 1rem;
+
+		&--error {
+			border: 2px solid var(--color-error);
+
+		}
 	}
 
 	&__button {
@@ -19,22 +24,5 @@
 
 	&__error {
 		color: var(--color-error);
-	}
-
-	&.error {
-		.username__text {
-			border: 2px solid var(--color-error);
-		}
-
-		.username__button {
-			background-color: var(--color-grey);
-			cursor: not-allowed;
-
-			&:hover {
-				background-color: var(--color-grey);
-				color: var(--color-light);
-				transform: none;
-			}
-		}
 	}
 }

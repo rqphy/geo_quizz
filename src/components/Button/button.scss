@@ -14,4 +14,15 @@
 		color: var(--color-primary);
 		transform: scale(1.1);
 	}
+
+	&.disabled {
+		background-color: var(--color-grey);
+		cursor: not-allowed;
+
+		&:hover {
+			background-color: var(--color-grey);
+			color: var(--color-light);
+			transform: none;
+		}
+	}
 }
