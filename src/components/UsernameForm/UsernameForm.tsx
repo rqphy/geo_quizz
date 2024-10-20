@@ -33,13 +33,16 @@ export default function UsernameForm({ onSubmit }: IUsernameForm) {
 				className={`username__text ${error && "username__text--error"}`}
 				placeholder="Entrez votre nom ici"
 				autoFocus
-				// maxLength={10}
-				// minLength={3}
+				maxLength={10}
+				minLength={3}
 				onChange={handleUsernameChange}
 				value={usernameValue}
 				required
 			/>
-			<Button label="Valider" className={`username__button ${error && 'disabled'}`} />
+			<Button
+				label="Valider"
+				className={`username__button ${error && "disabled"}`}
+			/>
 			{error && <p className="username__error">{error}</p>}
 		</form>
 	)
