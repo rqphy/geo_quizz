@@ -23,7 +23,6 @@ export default function UsernameForm({ onSubmit }: IUsernameForm) {
 			setError(null)
 		}
 		setUsernameValue(value)
-		console.log(error)
 	}
 
 	return (
