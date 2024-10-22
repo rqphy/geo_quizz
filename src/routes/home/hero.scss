@@ -1,0 +1,21 @@
+.hero {
+	height: 80vh;
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		height: 100%;
+		width: 45%;
+		padding: 10rem 0 5rem 10rem;
+	}
+
+	&__title {
+		font-size: 3.5rem;
+		font-weight: bold;
+	}
+
+	&__play {
+		width: 200px;
+	}
+}
