@@ -1,7 +1,8 @@
-import Button from "../../components/Button/Button"
 import { v4 as uuidv4 } from "uuid"
 import { useNavigate } from "react-router-dom"
 import "./hero.scss"
+import Button from "../../components/Button/Button"
+import Experience from "../../components/Experience/Experience"
 
 export default function Home() {
 	const navigate = useNavigate()
@@ -24,6 +25,7 @@ export default function Home() {
 						onClick={handlePlayClick}
 					/>
 				</div>
+				<Experience />
 			</section>
 		</>
 	)
