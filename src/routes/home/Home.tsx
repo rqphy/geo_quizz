@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 import { useNavigate } from "react-router-dom"
+import { Canvas } from "@react-three/fiber"
 import "./hero.scss"
 import Button from "../../components/Button/Button"
 import Experience from "../../components/Experience/Experience"
@@ -25,7 +26,11 @@ export default function Home() {
 						onClick={handlePlayClick}
 					/>
 				</div>
-				<Experience />
+				<div className="hero__planet">
+					<Canvas>
+						<Experience />
+					</Canvas>
+				</div>
 			</section>
 		</>
 	)
