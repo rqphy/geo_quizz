@@ -1,0 +1,54 @@
+@import "../../styles/mixins.scss";
+.hero {
+	position: relative;
+	height: 80vh;
+	display: flex;
+
+	@include medium {
+		flex-direction: column;
+		height: auto;
+	}
+
+	&__content {
+		position: relative;
+
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		height: 100%;
+		width: 45%;
+		padding: 10rem 0 5rem 10rem;
+		z-index: 2;
+
+		@include large {
+			padding: 10rem 0 0 5rem;
+			// width: 60%;
+		}
+
+		@include medium {
+			width: 100%;
+		}
+
+		@include small {
+			padding: 5rem 5rem 0 5rem;
+		}
+	}
+
+	&__planet {
+		width: 100%;
+		@include medium {
+			height: 60vh;
+			width: 100%;
+		}
+		// background-color: blue;
+	}
+
+	&__title {
+		font-size: 3.5rem;
+		font-weight: bold;
+	}
+
+	&__play {
+		width: 200px;
+	}
+}

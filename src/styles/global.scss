@@ -3,4 +3,12 @@ html {
 	font-family: var(--font-name);
 	color: var(--color-primary);
 	background-color: var(--color-secondary);
+
+	@include medium {
+		font-size: 14px;
+	}
+
+	@include small {
+		font-size: 12px;
+	}
 }

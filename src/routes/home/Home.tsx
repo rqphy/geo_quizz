@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid"
 import { useNavigate } from "react-router-dom"
 import { Canvas } from "@react-three/fiber"
-import "./hero.scss"
+import "./home.scss"
 import Button from "../../components/Button/Button"
 import Experience from "../../components/Experience/Experience"
 
