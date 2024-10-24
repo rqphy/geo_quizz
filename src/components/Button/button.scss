@@ -1,3 +1,4 @@
+@import "../../styles/mixins.scss";
 .button {
 	height: 2.5rem;
 	padding: 0.2rem 3rem;
@@ -8,6 +9,11 @@
 	font-weight: bold;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
+
+	@include medium {
+		height: 3.5rem;
+		padding: 0.6rem 3rem;
+	}
 
 	&:hover {
 		background-color: var(--color-tertiary);
