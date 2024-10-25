@@ -8,6 +8,29 @@
 	width: 180px;
 	padding: 1rem;
 	background-color: var(--color-tertiary-40);
+	transform: translateX(100%);
+	transition: transform 0.3s ease-in-out;
+
+	&--opened {
+		transform: none;
+	}
+
+	&__open {
+		$width: 1.5rem;
+		position: absolute;
+		left: -$width;
+		top: 50%;
+		transform: translateY(-50%);
+		background-color: var(--color-tertiary-40);
+		height: 3rem;
+		width: $width;
+		font-size: 1rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		border: none;
+	}
 
 	h2 {
 		font-size: 1.5rem;
