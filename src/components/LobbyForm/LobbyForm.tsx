@@ -18,6 +18,13 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 		}))
 	)
 
+	function updateNoneCheck(
+		updatedItems: { checked: any; label: string; slug: string }[]
+	) {
+		const someChecked = updatedItems.some((item) => item.checked)
+		setNoneChecked(!someChecked)
+	}
+
 	const handleCheckAll = (_event: any) => {
 		const { checked } = _event.target
 		setCheckAll(checked)
@@ -27,6 +34,8 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 			checked: checked,
 		}))
 		setItems(updatedItems)
+
+		updateNoneCheck(updatedItems)
 	}
 
 	const handleItemChange = (_event: any, slug: string) => {
@@ -39,8 +48,7 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 		const allChecked = updatedItems.every((item) => item.checked)
 		setCheckAll(allChecked)
 
-		const someChecked = updatedItems.some((item) => item.checked)
-		setNoneChecked(!someChecked)
+		updateNoneCheck(updatedItems)
 	}
 
 	const handleInvite = (_event: any) => {
