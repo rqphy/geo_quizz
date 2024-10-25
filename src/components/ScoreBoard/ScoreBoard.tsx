@@ -7,7 +7,7 @@ interface IScoreBoardProps {
 }
 
 export default function ScoreBoard({ playerList }: IScoreBoardProps) {
-	const [isOpened, setIsOpen] = useState<boolean>(false)
+	const [isOpened, setIsOpen] = useState<boolean>(true)
 	// sort playerlist by player score from high to low
 	playerList.sort((a, b) => b.score - a.score)
 
