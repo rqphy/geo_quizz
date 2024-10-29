@@ -12,7 +12,6 @@ import Quizz from "../../components/Quizz/Quizz"
 import UsernameForm from "../../components/UsernameForm/UsernameForm"
 import { ICountry } from "../../types/interfaces"
 import { Region } from "../../types/types"
-import { SocketManager } from "../../components/SocketManager/SocketManager"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -84,10 +83,5 @@ export default function Lobby() {
 		}
 	}
 
-	return (
-		<section className="lobby">
-			{renderContent()}
-			<SocketManager />
-		</section>
-	)
+	return <section className="lobby">{renderContent()}</section>
 }
