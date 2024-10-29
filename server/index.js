@@ -27,6 +27,26 @@ io.on("connection", (socket) => {
 		console.log("Lobby created with ID:", lobbyId)
 	})
 
+	// Join Lobby
+	socket.on('joinLobby', (lobbyId) => {
+
+		if(lobbies[lobbyId]) {
+			socket.join(lobbyId)
+			lobbies[lobbyId].users.push(socket.id)
+
+			// Notify the other users in the lobby
+			socket.to(lobbyId).emit('userJoined', socket.id)
+
+			// Confirm join
+			socket.emit('lobbyJoined', lobbyId)
+			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
+		} else {
+			socket.emit('error', 'Lobby introuvable')
+		}
+
+
+	})
+
 	socket.on("disconnect", () => {
 		console.log("user disconnected")
 	})
