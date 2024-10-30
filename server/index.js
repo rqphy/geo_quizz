@@ -27,6 +27,15 @@ io.on("connection", (socket) => {
 		console.log("Lobby created with ID:", lobbyId)
 	})
 
+	// Request join lobby
+	socket.on("requestJoinLobby", (lobbyId) => {
+		if (lobbies[lobbyId]) {
+			socket.emit("requestAccepted", lobbyId)
+		} else {
+			socket.emit("error", "Lobby introuvable")
+		}
+	})
+
 	// Join Lobby
 	socket.on("joinLobby", (lobbyId, username) => {
 		if (lobbies[lobbyId]) {

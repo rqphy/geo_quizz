@@ -20,8 +20,8 @@ export default function Home() {
 
 	function handleJoinLobby() {
 		if (lobbyId.trim()) {
-			socket.emit("joinLobby", lobbyId)
-			socket.on("joindedLobby", () => {
+			socket.emit("requestJoinLobby", lobbyId)
+			socket.on("requestAccepted", () => {
 				navigate(`/lobby/${lobbyId}`)
 			})
 			socket.on("error", (message) => {
