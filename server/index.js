@@ -49,5 +49,19 @@ io.on("connection", (socket) => {
 
 	socket.on("disconnect", () => {
 		console.log("user disconnected")
+
+		// Remove user from any lobbies they were in
+		for(const lobbyId in lobbies) {
+			if(lobbies[lobbyId].users.includes(socket.id)) {
+				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(id => id !== socket.id)
+				socket.to(lobbyId).emit('userLeft', socket.id)
+
+				// Delete lobby if empty
+				if(lobbies[lobbyId].users.length === 0) {
+					delete lobbies[lobbyId]
+					console.log(`Lobby ${lobbyId} deleted`)
+				}
+			}
+		}
 	})
 })
