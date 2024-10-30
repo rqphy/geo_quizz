@@ -19,8 +19,8 @@ io.on("connection", (socket) => {
 	socket.on("createLobby", () => {
 		const lobbyId = uuidv4() // Generate unique lobby ID
 		lobbies[lobbyId] = { users: [] } // Init lobby with empty user
-		socket.join(lobbyId) // Have the user join the lobby
-		lobbies[lobbyId].users.push(socket.id) // Add the user to the lobby's users
+		// socket.join(lobbyId) // Have the user join the lobby
+		// lobbies[lobbyId].users.push(socket.id) // Add the user to the lobby's users
 
 		// Emit back to the client
 		socket.emit("lobbyCreated", lobbyId)
@@ -28,39 +28,48 @@ io.on("connection", (socket) => {
 	})
 
 	// Join Lobby
-	socket.on('joinLobby', (lobbyId) => {
-
-		if(lobbies[lobbyId]) {
+	socket.on("joinLobby", (lobbyId, username) => {
+		if (lobbies[lobbyId]) {
 			socket.join(lobbyId)
-			lobbies[lobbyId].users.push(socket.id)
+			lobbies[lobbyId].users.push({
+				uuid: socket.id,
+				name: username,
+				score: 0,
+			})
 
 			// Notify the other users in the lobby
-			socket.to(lobbyId).emit('userJoined', socket.id)
+			socket.to(lobbyId).emit("userJoined", socket.id)
 
 			// Confirm join
-			socket.emit('lobbyJoined', lobbyId)
+			socket.emit("lobbyJoined", lobbyId)
 			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
+
+			// Update users list
+			socket.emit("updateUserList", lobbies[lobbyId].users)
 		} else {
-			socket.emit('error', 'Lobby introuvable')
+			socket.emit("error", "Lobby introuvable")
 		}
-
-
 	})
 
 	socket.on("disconnect", () => {
 		console.log("user disconnected")
 
 		// Remove user from any lobbies they were in
-		for(const lobbyId in lobbies) {
-			if(lobbies[lobbyId].users.includes(socket.id)) {
-				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(id => id !== socket.id)
-				socket.to(lobbyId).emit('userLeft', socket.id)
+		for (const lobbyId in lobbies) {
+			if (lobbies[lobbyId].users.includes(socket.id)) {
+				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
+					(id) => id !== socket.id
+				)
+				socket.to(lobbyId).emit("userLeft", socket.id)
 
 				// Delete lobby if empty
-				if(lobbies[lobbyId].users.length === 0) {
+				if (lobbies[lobbyId].users.length === 0) {
 					delete lobbies[lobbyId]
 					console.log(`Lobby ${lobbyId} deleted`)
 				}
+
+				// Update users list
+				socket.emit("updateUserList", lobbies[lobbyId].users)
 			}
 		}
 	})

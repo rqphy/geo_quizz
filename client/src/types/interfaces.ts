@@ -4,6 +4,7 @@ export interface ICountry {
 }
 
 export interface IPlayer {
+	uuid: string,
 	name: string,
 	score: number
 }

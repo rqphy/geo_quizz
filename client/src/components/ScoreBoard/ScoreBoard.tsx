@@ -23,7 +23,7 @@ export default function ScoreBoard({ playerList }: IScoreBoardProps) {
 			<h2>Scores</h2>
 			{playerList.map((player: IPlayer) => (
 				// change key to player.uuid when possible
-				<li key={player.name}>
+				<li key={player.uuid}>
 					<p>{player.name}</p> <p>{player.score}</p>
 				</li>
 			))}

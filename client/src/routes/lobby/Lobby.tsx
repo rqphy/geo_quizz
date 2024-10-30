@@ -5,13 +5,15 @@ import NorthAmericaFR from "../../data/FR/north_america.json"
 import SouthAmericaFR from "../../data/FR/south_america.json"
 import OceaniaFR from "../../data/FR/oceania.json"
 import "./lobby.scss"
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import Lobbyform from "../../components/LobbyForm/LobbyForm"
 import ScoreBoard from "../../components/ScoreBoard/ScoreBoard"
 import Quizz from "../../components/Quizz/Quizz"
 import UsernameForm from "../../components/UsernameForm/UsernameForm"
-import { ICountry } from "../../types/interfaces"
+import { ICountry, IPlayer } from "../../types/interfaces"
 import { Region } from "../../types/types"
+import { useParams } from "react-router-dom"
+import socket from "../../socket"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -22,25 +24,32 @@ const continentsData: Record<Region, ICountry[]> = {
 	AF: AfricaFR,
 }
 
-const fakePlayerList = [
-	{ name: "toto", score: 12 },
-	{ name: "Bibi", score: 9 },
-	{ name: "Jilo", score: 15 },
-	{ name: "Riri", score: 2 },
-	{ name: "Bolto", score: 8 },
-	{ name: "SavteSavteSavte", score: 8 },
-]
-
 export default function Lobby() {
+	const { lobbyId } = useParams()
 	const [playerUsername, setPlayerUsername] = useState<string | null>()
 	const [coutriesList, setCountriesList] = useState<ICountry[]>([])
+	const [userList, setUserList] = useState<IPlayer[]>([])
+
+	useEffect(() => {
+		// Listen for updates to the user list
+		socket.on("updateUserList", (userList) => {
+			setUserList(userList)
+			console.log(userList)
+		})
+		return () => {
+			socket.emit("leaveLobby", lobbyId)
+			socket.off("updateUserList")
+		}
+	}, [lobbyId])
 
 	function handleUsernameSubmit(_event: FormEvent<HTMLFormElement>): void {
 		_event.preventDefault()
 		const submittedName = new FormData(_event.currentTarget).get("username")
-		// TODO : CHECK USERNAME
 		let username: string = submittedName?.toString() ?? "Toto"
 		setPlayerUsername(username)
+
+		// Join the lobby
+		socket.emit("joinLobby", lobbyId, username)
 	}
 
 	function handlePartySubmit(_event: FormEvent<HTMLFormElement>): void {
@@ -59,7 +68,7 @@ export default function Lobby() {
 				return (
 					<>
 						<Quizz countriesList={coutriesList} />
-						<ScoreBoard playerList={fakePlayerList} />
+						<ScoreBoard playerList={userList} />
 					</>
 				)
 			} else {
@@ -69,7 +78,7 @@ export default function Lobby() {
 							<h2>Créez votre quizz:</h2>
 							<Lobbyform onSubmit={handlePartySubmit} />
 						</section>
-						<ScoreBoard playerList={fakePlayerList} />
+						<ScoreBoard playerList={userList} />
 					</>
 				)
 			}
