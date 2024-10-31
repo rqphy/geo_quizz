@@ -94,11 +94,7 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 			<Button label="Jouer" className={`${noneChecked && "disabled"}`} />
 			<Button label="Inviter" className="invite" onClick={handleInvite} />
 			{inviteModalVisible && (
-				<Modal
-					value={lobbyId}
-					label="Copier"
-					onClick={handleCopyLink}
-				/>
+				<Modal value={lobbyId} label="Copier" handleAction={handleCopyLink} />
 			)}
 		</form>
 	)

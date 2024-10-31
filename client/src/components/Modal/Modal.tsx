@@ -4,14 +4,22 @@ import { MouseEventHandler, useState } from "react"
 interface IModalProps {
 	value?: string
 	label?: string
-	onClick?: any
+	handleAction?: any
+	onChange?: any
 }
 
-export default function Modal({ value, label, onClick }: IModalProps) {
+export default function Modal({
+	value,
+	label,
+	handleAction,
+	onChange,
+}: IModalProps) {
 	const [hasClicked, setHasClicked] = useState<boolean>(false)
 
 	function handleButtonClick(_event: any) {
-		onClick(_event)
+		_event.preventDefault()
+
+		handleAction(_event)
 		setHasClicked(true)
 
 		setTimeout(() => {
@@ -19,9 +27,22 @@ export default function Modal({ value, label, onClick }: IModalProps) {
 		}, 2000)
 	}
 
+	function onKeyDown(_event: any) {
+		if (_event.key === "Enter") {
+			handleButtonClick(_event)
+		}
+	}
+
 	return (
 		<div className={`modal ${hasClicked && "modal--clicked"}`}>
-			<input type="text" value={value} className="modal__input" />
+			<input
+				type="text"
+				value={value}
+				className="modal__input"
+				onChange={onChange}
+				onKeyDown={onKeyDown}
+				autoFocus
+			/>
 			{label && (
 				<button className="modal__button" onClick={handleButtonClick}>
 					{label}

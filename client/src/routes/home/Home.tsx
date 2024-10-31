@@ -6,10 +6,12 @@ import Button from "../../components/Button/Button"
 import Experience from "../../components/Experience/Experience"
 import { useState } from "react"
 import socket from "../../socket"
+import Modal from "../../components/Modal/Modal"
 
 export default function Home() {
 	const navigate = useNavigate()
 	const [lobbyId, setLobbyId] = useState<string>("")
+	const [joinModalVisible, setJoinModalVisible] = useState<boolean>(false)
 
 	function handleCreateLobby() {
 		socket.emit("createLobby")
@@ -43,17 +45,21 @@ export default function Home() {
 						className="hero__play"
 						onClick={handleCreateLobby}
 					/>
-					<input
-						type="text"
-						placeholder="Entrez le code du lobby"
-						value={lobbyId}
-						onChange={(_event) => setLobbyId(_event.target.value)}
-					/>
 					<Button
 						label="Rejoindre"
 						className="hero__play"
-						onClick={handleJoinLobby}
+						onClick={() => setJoinModalVisible(!joinModalVisible)}
 					/>
+					{joinModalVisible && (
+						<Modal
+							label="Go"
+							handleAction={handleJoinLobby}
+							value={lobbyId}
+							onChange={(_event: any) =>
+								setLobbyId(_event.target.value)
+							}
+						/>
+					)}
 				</div>
 				<div className="hero__planet">
 					<Canvas>
