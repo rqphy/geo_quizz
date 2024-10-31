@@ -3,14 +3,19 @@ import CheckInput from "./CheckInput"
 import continentsList from "../../data/FR/continents.json"
 import { FormEvent, useState } from "react"
 import Button from "../Button/Button"
+import Modal from "../Modal/Modal"
+import { useParams } from "react-router-dom"
 
 interface ILobbyForm {
 	onSubmit: (_event: FormEvent<HTMLFormElement>) => void
 }
 
 export default function LobbyForm({ onSubmit }: ILobbyForm) {
+	const { lobbyId } = useParams()
+
 	const [checkAll, setCheckAll] = useState<boolean>(false)
 	const [noneChecked, setNoneChecked] = useState<boolean>(true)
+	const [inviteModalVisible, setInviteModalVisible] = useState<boolean>(false)
 	const [items, setItems] = useState(
 		continentsList.map((continent) => ({
 			...continent,
@@ -25,7 +30,7 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 		setNoneChecked(!someChecked)
 	}
 
-	const handleCheckAll = (_event: any) => {
+	function handleCheckAll(_event: any) {
 		const { checked } = _event.target
 		setCheckAll(checked)
 
@@ -38,7 +43,7 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 		updateNoneCheck(updatedItems)
 	}
 
-	const handleItemChange = (_event: any, slug: string) => {
+	function handleItemChange(_event: any, slug: string) {
 		const { checked } = _event.target
 		const updatedItems = items.map((item) =>
 			item.slug === slug ? { ...item, checked: checked } : item
@@ -51,9 +56,15 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 		updateNoneCheck(updatedItems)
 	}
 
-	const handleInvite = (_event: any) => {
+	function handleInvite(_event: any) {
 		_event.preventDefault()
-		console.log("invite")
+		setInviteModalVisible(!inviteModalVisible)
+	}
+
+	function handleCopyLink(_event: any) {
+		_event.preventDefault()
+		const copyText: string = lobbyId as string
+		navigator.clipboard.writeText(copyText)
 	}
 
 	return (
@@ -82,6 +93,13 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 			))}
 			<Button label="Jouer" className={`${noneChecked && "disabled"}`} />
 			<Button label="Inviter" className="invite" onClick={handleInvite} />
+			{inviteModalVisible && (
+				<Modal
+					value={lobbyId}
+					label="Copier"
+					onClick={handleCopyLink}
+				/>
+			)}
 		</form>
 	)
 }
