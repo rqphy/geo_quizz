@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid"
 import { useNavigate } from "react-router-dom"
 import { Canvas } from "@react-three/fiber"
 import "./home.scss"
@@ -10,21 +9,23 @@ import Modal from "../../components/Modal/Modal"
 
 export default function Home() {
 	const navigate = useNavigate()
-	const [lobbyId, setLobbyId] = useState<string>("")
+	const [joinLobbyId, setJoinLobbyId] = useState<string>("")
 	const [joinModalVisible, setJoinModalVisible] = useState<boolean>(false)
 
 	function handleCreateLobby() {
 		socket.emit("createLobby")
-		socket.on("lobbyCreated", (newLobbyId) => {
-			navigate(`/lobby/${newLobbyId}`)
+		socket.on("lobbyCreated", ({ lobbyId, creator }) => {
+			navigate(`/lobby/${lobbyId}`, { state: { creator: creator } })
 		})
 	}
 
 	function handleJoinLobby() {
-		if (lobbyId.trim()) {
-			socket.emit("requestJoinLobby", lobbyId)
-			socket.on("requestAccepted", () => {
-				navigate(`/lobby/${lobbyId}`)
+		if (joinLobbyId.trim()) {
+			socket.emit("requestJoinLobby", joinLobbyId)
+			socket.on("requestAccepted", ({ creator }) => {
+				navigate(`/lobby/${joinLobbyId}`, {
+					state: { creator: creator },
+				})
 			})
 			socket.on("error", (message) => {
 				alert(message)
@@ -54,9 +55,9 @@ export default function Home() {
 						<Modal
 							label="Go"
 							handleAction={handleJoinLobby}
-							value={lobbyId}
+							value={joinLobbyId}
 							onChange={(_event: any) =>
-								setLobbyId(_event.target.value)
+								setJoinLobbyId(_event.target.value)
 							}
 						/>
 					)}

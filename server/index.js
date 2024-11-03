@@ -18,19 +18,22 @@ io.on("connection", (socket) => {
 	// Create Lobby
 	socket.on("createLobby", () => {
 		const lobbyId = uuidv4() // Generate unique lobby ID
-		lobbies[lobbyId] = { users: [] } // Init lobby with empty user
+		lobbies[lobbyId] = { users: [], creator: socket.id } // Init lobby with empty user
 		// socket.join(lobbyId) // Have the user join the lobby
 		// lobbies[lobbyId].users.push(socket.id) // Add the user to the lobby's users
 
 		// Emit back to the client
-		socket.emit("lobbyCreated", lobbyId)
+		socket.emit("lobbyCreated", { lobbyId, creator: socket.id })
 		console.log("Lobby created with ID:", lobbyId)
 	})
 
 	// Request join lobby
 	socket.on("requestJoinLobby", (lobbyId) => {
 		if (lobbies[lobbyId]) {
-			socket.emit("requestAccepted", lobbyId)
+			socket.emit("requestAccepted", {
+				lobbyId,
+				creator: lobbies[lobbyId].creator,
+			})
 		} else {
 			socket.emit("error", "Lobby introuvable")
 		}
@@ -50,7 +53,7 @@ io.on("connection", (socket) => {
 			socket.to(lobbyId).emit("userJoined", socket.id)
 
 			// Confirm join
-			socket.emit("lobbyJoined", lobbyId)
+			socket.emit("lobbyJoined", { lobbyId, creator: socket.id })
 			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
 
 			// Update users list

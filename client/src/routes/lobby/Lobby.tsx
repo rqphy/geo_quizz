@@ -12,7 +12,7 @@ import Quizz from "../../components/Quizz/Quizz"
 import UsernameForm from "../../components/UsernameForm/UsernameForm"
 import { ICountry, IPlayer } from "../../types/interfaces"
 import { Region } from "../../types/types"
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import socket from "../../socket"
 
 const continentsData: Record<Region, ICountry[]> = {
@@ -25,16 +25,24 @@ const continentsData: Record<Region, ICountry[]> = {
 }
 
 export default function Lobby() {
+	const location = useLocation()
 	const { lobbyId } = useParams()
 	const [playerUsername, setPlayerUsername] = useState<string | null>()
 	const [coutriesList, setCountriesList] = useState<ICountry[]>([])
 	const [userList, setUserList] = useState<IPlayer[]>([])
+	const [isCreator, setIsCreator] = useState(false)
 
 	useEffect(() => {
+		// Check if creator
+		const creator = location.state?.creator
+		console.log(location.state.creator, socket.id)
+
+		// Check if the current user is the creator
+		setIsCreator(socket.id === creator)
+
 		// Listen for updates to the user list
 		socket.on("updateUserList", (userList) => {
 			setUserList(userList)
-			console.log(userList)
 		})
 		return () => {
 			socket.emit("leaveLobby", lobbyId)
@@ -71,7 +79,7 @@ export default function Lobby() {
 						<ScoreBoard playerList={userList} />
 					</>
 				)
-			} else {
+			} else if (isCreator) {
 				return (
 					<>
 						<section className="lobby__creation">
@@ -81,6 +89,10 @@ export default function Lobby() {
 						<ScoreBoard playerList={userList} />
 					</>
 				)
+			} else {
+				;<>
+					<h2>waiting for leader</h2>
+				</>
 			}
 		} else {
 			return (
