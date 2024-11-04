@@ -102,7 +102,7 @@ export default function Lobby() {
 								<PlayerList
 									list={userList}
 									creatorId={creatorId}
-									currentId={socket.id ?? ''}
+									currentId={socket.id ?? ""}
 								/>
 								<Button
 									label="En attente du créateur"

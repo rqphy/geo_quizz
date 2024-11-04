@@ -29,7 +29,10 @@ io.on("connection", (socket) => {
 
 	// Request join lobby
 	socket.on("requestJoinLobby", (lobbyId) => {
-		if (lobbies[lobbyId]) {
+		if (
+			lobbies[lobbyId] &&
+			!lobbies[lobbyId].users.some((user) => user.uuid === socket.id)
+		) {
 			socket.emit("requestAccepted", {
 				lobbyId,
 				creator: lobbies[lobbyId].creator,
@@ -41,7 +44,10 @@ io.on("connection", (socket) => {
 
 	// Join Lobby
 	socket.on("joinLobby", (lobbyId, username) => {
-		if (lobbies[lobbyId]) {
+		if (
+			lobbies[lobbyId] &&
+			!lobbies[lobbyId].users.some((user) => user.uuid === socket.id)
+		) {
 			socket.join(lobbyId)
 			lobbies[lobbyId].users.push({
 				uuid: socket.id,
