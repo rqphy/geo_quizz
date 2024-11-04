@@ -14,6 +14,7 @@ import { ICountry, IPlayer } from "../../types/interfaces"
 import { Region } from "../../types/types"
 import { useLocation, useParams } from "react-router-dom"
 import socket from "../../socket"
+import PlayerList from "../../components/PlayerList/PlayerList"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -30,13 +31,15 @@ export default function Lobby() {
 	const [playerUsername, setPlayerUsername] = useState<string | null>()
 	const [coutriesList, setCountriesList] = useState<ICountry[]>([])
 	const [userList, setUserList] = useState<IPlayer[]>([])
-	const [isCreator, setIsCreator] = useState(false)
+	const [isCreator, setIsCreator] = useState<boolean>(false)
+	const [creatorId, setCreatorId] = useState<string>("")
 
 	useEffect(() => {
 		// Check if creator
 		const creator = location.state?.creator
-		console.log(location.state.creator, socket.id)
-
+		if (creator) {
+			setCreatorId(creator)
+		}
 		// Check if the current user is the creator
 		setIsCreator(socket.id === creator)
 
@@ -79,20 +82,25 @@ export default function Lobby() {
 						<ScoreBoard playerList={userList} />
 					</>
 				)
-			} else if (isCreator) {
-				return (
-					<>
-						<section className="lobby__creation">
-							<h2>Créez votre quizz:</h2>
-							<Lobbyform onSubmit={handlePartySubmit} />
-						</section>
-						<ScoreBoard playerList={userList} />
-					</>
-				)
 			} else {
-				;<>
-					<h2>waiting for leader</h2>
-				</>
+				if (isCreator) {
+					return (
+						<>
+							<section className="lobby__creation">
+								<h2>Créez votre quizz:</h2>
+								<Lobbyform onSubmit={handlePartySubmit} />
+							</section>
+							<ScoreBoard playerList={userList} />
+						</>
+					)
+				} else {
+					return (
+						<>
+							<h2>Lobby</h2>
+							<PlayerList list={userList} creatorId={creatorId} />
+						</>
+					)
+				}
 			}
 		} else {
 			return (

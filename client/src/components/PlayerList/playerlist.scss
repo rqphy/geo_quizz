@@ -1,0 +1,25 @@
+@import "../../styles/mixins.scss";
+
+.playerlist {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 1rem;
+	margin-top: 2rem;
+
+	@include medium {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	&__player {
+		width: 200px;
+		margin-top: 0.5rem;
+		padding: 1rem;
+		background-color: var(--color-tertiary-40);
+		border-radius: 0.5rem;
+
+		@include medium {
+			margin-top: 0.2rem;
+			width: 100px;
+		}
+	}
+}
