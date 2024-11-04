@@ -15,6 +15,7 @@ import { Region } from "../../types/types"
 import { useLocation, useParams } from "react-router-dom"
 import socket from "../../socket"
 import PlayerList from "../../components/PlayerList/PlayerList"
+import Button from "../../components/Button/Button"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -96,8 +97,17 @@ export default function Lobby() {
 				} else {
 					return (
 						<>
-							<h2>Lobby</h2>
-							<PlayerList list={userList} creatorId={creatorId} />
+							<section className="lobby__list">
+								<h2>Lobby</h2>
+								<PlayerList
+									list={userList}
+									creatorId={creatorId}
+								/>
+								<Button
+									label="En attente du créateur"
+									className="disabled lobby__list--button"
+								/>
+							</section>
 						</>
 					)
 				}
