@@ -10,6 +10,16 @@ const io = new Server({
 
 const lobbies = {}
 
+function generateRandomCountryId(listLength, lastCountryId) {
+	let newCountryId = Math.round(Math.random() * (listLength - 1))
+
+	if (newCountryId === lastCountryId) {
+		newCountryId++
+	}
+
+	return newCountryId
+}
+
 io.listen(3000)
 
 io.on("connection", (socket) => {
@@ -68,6 +78,39 @@ io.on("connection", (socket) => {
 			socket.emit("error", "Lobby introuvable")
 		}
 	})
+
+	socket.on("submitLobby", (lobbyId, numberOfCountry, lastCountryId) => {
+		// Init round
+		lobbies[lobbyId].round = 1
+		lobbies[lobbyId].numberOfCountry = numberOfCountry
+		const countryId = generateRandomCountryId(
+			numberOfCountry,
+			lastCountryId
+		)
+
+		// Start game
+		socket.to(lobbyId).emit("startGame", { countryId })
+	})
+
+	socket.on("goodAnswer", (lobbyId, playerId, lastCountryId) => {
+		// Update values
+		lobbies[lobbyId].round += 1
+		const countryId = generateRandomCountryId(
+			lobbies[lobbyId].numberOfCountry,
+			lastCountryId
+		)
+
+		// Update score
+		lobbies[lobbyId].users.find((user) => user.id === playerId).score += 1
+
+		// Start new Round
+		socket.to(lobbyId).emit("startNewRound", { countryId })
+	})
+
+	socket.on('badAnswer', (lobbyId, answer) => {
+		socket.to(lobbyId).emit('wrongAnswer', { answer })
+	})
+
 
 	socket.on("disconnect", () => {
 		console.log("user disconnected")
