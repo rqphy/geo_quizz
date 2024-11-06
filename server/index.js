@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
 			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
 
 			// Update users list
-			socket.emit("updateUserList", lobbies[lobbyId].users)
+			io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 		} else {
 			socket.emit("error", "Lobby introuvable")
 		}

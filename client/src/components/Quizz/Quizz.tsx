@@ -7,11 +7,12 @@ import useRoundCountStore from "../../stores/roundCount"
 import "./quizz.scss"
 
 interface IQuizzProps {
-	countriesList: ICountry[]
+	countriesList: ICountry[],
+	defaultCountryId: number
 }
 
-export default function Quizz({ countriesList }: IQuizzProps) {
-	const [countryId, setCountryId] = useState<number>(0)
+export default function Quizz({ countriesList, defaultCountryId }: IQuizzProps) {
+	const [countryId, setCountryId] = useState<number>(defaultCountryId)
 	const [gamemode, setGamemode] = useState<Gamemode>("findCountry")
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
@@ -28,16 +29,7 @@ export default function Quizz({ countriesList }: IQuizzProps) {
 	}, [countryId, gamemode])
 
 	useEffect(() => {
-		let newCountryId = Math.round(
-			Math.random() * (countriesList.length - 1)
-		)
-
-		if (newCountryId === countryId) {
-			newCountryId++
-		}
-
-		setCountryId(newCountryId)
-		setGamemode(Math.random() > 0.5 ? "findCapital" : "findCountry")
+		// setGamemode(Math.random() > 0.5 ? "findCapital" : "findCountry")
 	}, [roundCount])
 
 	return (

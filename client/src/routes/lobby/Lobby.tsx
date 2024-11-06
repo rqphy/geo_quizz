@@ -34,6 +34,7 @@ export default function Lobby() {
 	const [userList, setUserList] = useState<IPlayer[]>([])
 	const [isCreator, setIsCreator] = useState<boolean>(false)
 	const [creatorId, setCreatorId] = useState<string>("")
+	const [defaultCountryId, setDefaultCountryId] = useState<number>(0)
 
 	useEffect(() => {
 		// Check if creator
@@ -51,6 +52,7 @@ export default function Lobby() {
 		socket.on("startGame", ({ countriesList, countryId }) => {
 			console.log("start game", countriesList)
 			setCountriesList(countriesList)
+			setDefaultCountryId(countryId)
 		})
 
 		return () => {
@@ -87,7 +89,10 @@ export default function Lobby() {
 			if (coutriesList.length > 1) {
 				return (
 					<>
-						<Quizz countriesList={coutriesList} />
+						<Quizz
+							countriesList={coutriesList}
+							defaultCountryId={defaultCountryId}
+						/>
 						<ScoreBoard playerList={userList} />
 					</>
 				)
