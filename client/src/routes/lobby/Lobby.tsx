@@ -48,9 +48,15 @@ export default function Lobby() {
 		socket.on("updateUserList", (userList) => {
 			setUserList(userList)
 		})
+		socket.on("startGame", ({ countriesList, countryId }) => {
+			console.log("start game", countriesList)
+			setCountriesList(countriesList)
+		})
+
 		return () => {
 			socket.emit("leaveLobby", lobbyId)
 			socket.off("updateUserList")
+			socket.off("startGame")
 		}
 	}, [lobbyId])
 
@@ -71,7 +77,9 @@ export default function Lobby() {
 		for (const key of [...submittedContinentList.keys()]) {
 			tempCountriesList.push(...continentsData[key as Region])
 		}
-		setCountriesList(tempCountriesList)
+
+		// emit
+		socket.emit("submitLobby", lobbyId, tempCountriesList)
 	}
 
 	function renderContent() {

@@ -42,6 +42,7 @@ export default function Modal({
 				onChange={onChange}
 				onKeyDown={onKeyDown}
 				autoFocus
+				readOnly={!!value}
 			/>
 			{label && (
 				<button className="modal__button" onClick={handleButtonClick}>

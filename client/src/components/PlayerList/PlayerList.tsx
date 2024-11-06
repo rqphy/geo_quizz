@@ -20,6 +20,7 @@ export default function PlayerList({
 						player.uuid === currentId &&
 						"playerlist__player--current"
 					}`}
+					key={player.uuid}
 				>
 					{player.name} {player.uuid === creatorId && "⭐"}
 				</li>
