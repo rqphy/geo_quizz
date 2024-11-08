@@ -94,7 +94,6 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("goodAnswer", (lobbyId, playerId) => {
-		console.log(lobbies[lobbyId], playerId)
 		// Update values
 		lobbies[lobbyId].round += 1
 		const roundCount = lobbies[lobbyId].round
@@ -106,6 +105,8 @@ io.on("connection", (socket) => {
 
 		// Update score
 		lobbies[lobbyId].users.find((user) => user.uuid === playerId).score += 1
+		// io.to(lobbyId).emit("updateScores", lobbies[lobbyId])
+		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
 		// Start new Round
 		io.to(lobbyId).emit("startNewRound", {
