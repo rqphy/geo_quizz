@@ -5,6 +5,8 @@ import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
 import useRoundCountStore from "../../stores/roundCount"
 import "./quizz.scss"
+import socket from "../../socket"
+
 
 interface IQuizzProps {
 	countriesList: ICountry[],
@@ -16,7 +18,16 @@ export default function Quizz({ countriesList, defaultCountryId }: IQuizzProps) 
 	const [gamemode, setGamemode] = useState<Gamemode>("findCountry")
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
-	const roundCount = useRoundCountStore((state) => state.roundCount)
+	// const roundCount = useRoundCountStore((state) => state.roundCount)
+	const [roundCount, setRoundCount] = useState<number>(1)
+
+	useEffect(() => {
+		socket.on('startNewRound',({serverRoundCount, countryId, gamemode}) => {
+			setRoundCount(serverRoundCount)
+			setCountryId(countryId)
+			setGamemode(gamemode)
+		} )
+	}, [])
 
 	useEffect(() => {
 		if (gamemode === "findCapital") {
@@ -27,10 +38,6 @@ export default function Quizz({ countriesList, defaultCountryId }: IQuizzProps) 
 			setExpectedAnswer(countriesList[countryId].country_name)
 		}
 	}, [countryId, gamemode])
-
-	useEffect(() => {
-		// setGamemode(Math.random() > 0.5 ? "findCapital" : "findCountry")
-	}, [roundCount])
 
 	return (
 		<div className="quizz">

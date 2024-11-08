@@ -94,18 +94,25 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("goodAnswer", (lobbyId, playerId) => {
+		console.log(lobbies[lobbyId], playerId)
 		// Update values
 		lobbies[lobbyId].round += 1
+		const roundCount = lobbies[lobbyId].round
 		const countryId = generateRandomCountryId(
 			lobbies[lobbyId].countriesList.length,
 			0 // Random countryId
 		)
+		const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
 
 		// Update score
-		lobbies[lobbyId].users.find((user) => user.id === playerId).score += 1
+		lobbies[lobbyId].users.find((user) => user.uuid === playerId).score += 1
 
 		// Start new Round
-		io.to(lobbyId).emit("startNewRound", { countryId })
+		io.to(lobbyId).emit("startNewRound", {
+			serverRoundCount: roundCount,
+			countryId,
+			gamemode,
+		})
 	})
 
 	socket.on("badAnswer", (lobbyId, answer) => {

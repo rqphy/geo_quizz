@@ -2,6 +2,8 @@ import Button from "../Button/Button"
 import useRoundCountStore from "../../stores/roundCount"
 import { useState } from "react"
 import "./gameform.scss"
+import socket from "../../socket"
+import { useParams } from "react-router-dom"
 
 function removeAccents(str: string): string {
 	return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -20,6 +22,7 @@ interface IGameFormProps {
 }
 
 export default function GameForm({ expectedAnswer }: IGameFormProps) {
+	const { lobbyId } = useParams()
 	const increaseRoundCount = useRoundCountStore((state) => state.increase)
 	const [isAnimating, setIsAnimating] = useState<boolean>(false)
 
@@ -37,6 +40,7 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 
 		if (checkAnswer(expectedAnswer, inputValue)) {
 			// tada + next round + player point
+			socket.emit("goodAnswer", lobbyId, socket.id)
 			increaseRoundCount()
 			console.log("YEAH")
 		} else {
