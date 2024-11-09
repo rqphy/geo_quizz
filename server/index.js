@@ -117,7 +117,8 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("badAnswer", (lobbyId, answer) => {
-		io.to(lobbyId).to(lobbyId).emit("wrongAnswer", { answer })
+		console.log("BADDDDADDDADAD", answer)
+		io.to(lobbyId).emit("wrongAnswer", answer)
 	})
 
 	socket.on("disconnect", () => {

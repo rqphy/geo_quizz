@@ -46,8 +46,8 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 		} else {
 			// emit answer
 			startFailAnimation()
-			socket.emit("badAnswer", inputValue)
-			console.log("NOPE")
+			socket.emit("badAnswer", lobbyId, inputValue)
+			console.log("NOPE", inputValue)
 		}
 
 		// Clear input
