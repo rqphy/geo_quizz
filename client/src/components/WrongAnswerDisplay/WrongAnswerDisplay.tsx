@@ -24,7 +24,9 @@ export default function WrongAnswerDisplay() {
 
 	return (
 		<div className="answerdisplay">
+			<p className="answerdisplay__answer">test</p>
 			<div onClick={handleClick}>Click here</div>
+
 			<div>
 				{answers.map((answer) => (
 					<p className="answerdisplay__answer" key={answer.id}>
