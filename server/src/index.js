@@ -131,7 +131,6 @@ io.on("connection", (socket) => {
 
 		// Remove user from any lobbies they were in
 		for (const lobbyId in lobbies) {
-			console.log(lobbies[lobbyId], socket.id)
 			if (
 				lobbies[lobbyId].users.filter((user) => user.uuid == socket.id)
 					.length > 0
@@ -140,12 +139,9 @@ io.on("connection", (socket) => {
 					(user) => user.uuid !== socket.id
 				)
 
-				console.log(lobbies[lobbyId].users)
-
 				// Delete lobby if empty
 				if (lobbies[lobbyId].users.length === 0) {
 					delete lobbies[lobbyId]
-					console.log(`Lobby ${lobbyId} deleted`)
 				}
 
 				// Update users list
