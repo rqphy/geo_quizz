@@ -16,6 +16,7 @@ import { useLocation, useParams } from "react-router-dom"
 import socket from "../../socket"
 import PlayerList from "../../components/PlayerList/PlayerList"
 import Button from "../../components/Button/Button"
+import WrongAnswerDisplay from "../../components/WrongAnswerDisplay/WrongAnswerDisplay"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -89,6 +90,7 @@ export default function Lobby() {
 			if (coutriesList.length > 1) {
 				return (
 					<>
+						<WrongAnswerDisplay />
 						<Quizz
 							countriesList={coutriesList}
 							defaultCountryId={defaultCountryId}
