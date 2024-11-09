@@ -23,7 +23,7 @@ function generateRandomCountryId(listLength, lastCountryId) {
 io.listen(3000)
 
 io.on("connection", (socket) => {
-	console.log("user connected")
+	console.log("user connected", socket.rooms)
 
 	// Create Lobby
 	socket.on("createLobby", () => {
@@ -59,6 +59,7 @@ io.on("connection", (socket) => {
 			!lobbies[lobbyId].users.some((user) => user.uuid === socket.id)
 		) {
 			socket.join(lobbyId)
+			console.log(socket.rooms, lobbyId)
 			lobbies[lobbyId].users.push({
 				uuid: socket.id,
 				name: username,
@@ -77,6 +78,12 @@ io.on("connection", (socket) => {
 		} else {
 			socket.emit("error", "Lobby introuvable")
 		}
+	})
+
+	// leave lobby
+	socket.on("leaveLobby", (lobbyId, playerId) => {
+		console.log(lobbyId, playerId)
+		// lobbies[lobbyId].users = lobbies[lobbyId].users.filter(user => user.uuid !== userId)
 	})
 
 	socket.on("submitLobby", (lobbyId, countriesList, lastCountryId) => {
@@ -120,15 +127,20 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("disconnect", () => {
-		console.log("user disconnected")
+		console.log("user disconnected", socket.rooms, socket.id)
 
 		// Remove user from any lobbies they were in
 		for (const lobbyId in lobbies) {
-			if (lobbies[lobbyId].users.includes(socket.id)) {
+			console.log(lobbies[lobbyId], socket.id)
+			if (
+				lobbies[lobbyId].users.filter((user) => user.uuid == socket.id)
+					.length > 0
+			) {
 				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
-					(id) => id !== socket.id
+					(user) => user.uuid !== socket.id
 				)
-				socket.to(lobbyId).emit("userLeft", socket.id)
+
+				console.log(lobbies[lobbyId].users)
 
 				// Delete lobby if empty
 				if (lobbies[lobbyId].users.length === 0) {
@@ -137,7 +149,7 @@ io.on("connection", (socket) => {
 				}
 
 				// Update users list
-				socket.emit("updateUserList", lobbies[lobbyId].users)
+				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 			}
 		}
 	})

@@ -57,7 +57,7 @@ export default function Lobby() {
 		})
 
 		return () => {
-			socket.emit("leaveLobby", lobbyId)
+			socket.emit("leaveLobby", lobbyId, socket.id)
 			socket.off("updateUserList")
 			socket.off("startGame")
 		}
