@@ -25,7 +25,6 @@ export default function WrongAnswerDisplay() {
 
 	useEffect(() => {
 		socket.on("wrongAnswer", (answer: string) => {
-			console.log("WRONG", answer)
 			// Create a unique ID for each answer
 			const id = Date.now()
 			setAnswers((prevAnswers) => [

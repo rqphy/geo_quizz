@@ -105,7 +105,6 @@ io.on("connection", (socket) => {
 
 		// Update score
 		lobbies[lobbyId].users.find((user) => user.uuid === playerId).score += 1
-		// io.to(lobbyId).emit("updateScores", lobbies[lobbyId])
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
 		// Start new Round
@@ -117,7 +116,6 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("badAnswer", (lobbyId, answer) => {
-		console.log("BADDDDADDDADAD", answer)
 		io.to(lobbyId).emit("wrongAnswer", answer)
 	})
 

@@ -42,12 +42,10 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 			// tada + next round + player point
 			socket.emit("goodAnswer", lobbyId, socket.id)
 			increaseRoundCount()
-			console.log("YEAH")
 		} else {
 			// emit answer
 			startFailAnimation()
 			socket.emit("badAnswer", lobbyId, inputValue)
-			console.log("NOPE", inputValue)
 		}
 
 		// Clear input
