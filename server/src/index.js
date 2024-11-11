@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
 	})
 
 	// Request join lobby
-	socket.on("requestJoinLobby", (lobbyId) => {
+	socket.on("requestLobbyAccess", (lobbyId) => {
 		if (
 			lobbies[lobbyId] &&
 			!lobbies[lobbyId].users.some((user) => user.uuid === socket.id)
