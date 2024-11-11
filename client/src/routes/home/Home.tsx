@@ -21,7 +21,7 @@ export default function Home() {
 
 	function handleJoinLobby() {
 		if (joinLobbyId.trim()) {
-			socket.emit("requestJoinLobby", joinLobbyId)
+			socket.emit("requestLobbyAccess", joinLobbyId)
 			socket.on("requestAccepted", ({ creator }) => {
 				navigate(`/lobby/${joinLobbyId}`, {
 					state: { creator: creator },
