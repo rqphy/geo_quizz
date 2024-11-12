@@ -1,9 +1,8 @@
-import React, {
+import {
 	createContext,
 	ReactNode,
 	useContext,
 	useEffect,
-	useRef,
 	useState,
 } from "react"
 import { io, Socket } from "socket.io-client"
@@ -24,6 +23,7 @@ interface ISocketContextProps {
 	socket: Socket
 	players: IPlayer[]
 	methods: ISocketProviderMethods
+	isConnected: boolean
 }
 const SocketContext = createContext<ISocketContextProps | undefined>(undefined)
 const socket: Socket = io("http://localhost:3000")
@@ -84,7 +84,9 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 	}
 
 	return (
-		<SocketContext.Provider value={{ socket, players, methods }}>
+		<SocketContext.Provider
+			value={{ socket, players, methods, isConnected }}
+		>
 			{children}
 		</SocketContext.Provider>
 	)
