@@ -1,34 +1,67 @@
-import React, { createContext, ReactNode, useContext, useEffect } from "react"
+import React, {
+	createContext,
+	ReactNode,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
 import { io, Socket } from "socket.io-client"
-import { ICountry } from "../types/interfaces"
-
-const socket = io("http://localhost:3000")
+import { ICountry, IPlayer } from "../types/interfaces"
 
 // Socket Context
 interface ISocketProviderMethods {
-	createLobby: () => void,
-	requestLobbyAccess: (lobbyId: string) => void,
-	joinLobby: (lobbyId: string, username: string) => void,
-	leaveLobby: (lobbyId: string, userId: string) => void,
-	setupGame: (lobbyId: string, countriesList: ICountry[]) => void,
-	goodAnswer: (lobbyId: string, userId: string) => void,
+	createLobby: () => void
+	requestLobbyAccess: (lobbyId: string) => void
+	joinLobby: (lobbyId: string, username: string) => void
+	leaveLobby: (lobbyId: string, userId: string) => void
+	setupGame: (lobbyId: string, countriesList: ICountry[]) => void
+	goodAnswer: (lobbyId: string, userId: string) => void
 	badAnswer: (lobbyId: string, answer: string) => void
 }
 
 interface ISocketContextProps {
 	socket: Socket
+	players: IPlayer[]
 	methods: ISocketProviderMethods
 }
 const SocketContext = createContext<ISocketContextProps | undefined>(undefined)
+const socket: Socket = io("http://localhost:3000")
 
 interface ISocketProviderProps {
 	children: ReactNode
 }
 
 export function SocketProvider({ children }: ISocketProviderProps) {
+	const [players, setPlayers] = useState<IPlayer[]>([])
+	const [isConnected, setIsConnected] = useState<boolean>(false)
+
+	useEffect(() => {
+		socket.on("connect", () => {
+			setIsConnected(true)
+			console.log("Connected to server:" + socket.id)
+		})
+
+		socket.on("disconnect", () => {
+			setIsConnected(false)
+			console.log("Disconnected from server")
+		})
+
+		socket.on("updateUserList", (userList) => {
+			setPlayers(userList)
+		})
+
+		return () => {
+			socket.off("connect")
+			socket.off("disconnect")
+			socket.off("updateUserList")
+		}
+	}, [])
+
 	const methods = {
 		createLobby(): void {
 			socket.emit("createLobby")
+			console.log("create lobby")
 		},
 		requestLobbyAccess(lobbyId: string): void {
 			socket.emit("requestLobbyAccess", lobbyId)
@@ -47,12 +80,20 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 		},
 		badAnswer(lobbyId: string, answer: string) {
 			socket.emit("badAnswer", lobbyId, answer)
-		}
+		},
 	}
 
 	return (
-		<SocketContext.Provider value={{ socket, methods}}>
+		<SocketContext.Provider value={{ socket, players, methods }}>
 			{children}
 		</SocketContext.Provider>
 	)
+}
+
+export const useSocket = () => {
+	const context = useContext(SocketContext)
+	if (!context) {
+		throw new Error("useSocket doit etre utilise dans un SocketProvider")
+	}
+	return context
 }

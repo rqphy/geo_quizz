@@ -4,16 +4,17 @@ import "./home.scss"
 import Button from "../../components/Button/Button"
 import Experience from "../../components/Experience/Experience"
 import { useState } from "react"
-import socket from "../../socket"
 import Modal from "../../components/Modal/Modal"
+import { useSocket } from "../../contexts/SocketManager"
 
 export default function Home() {
 	const navigate = useNavigate()
+	const { socket, methods } = useSocket()
 	const [joinLobbyId, setJoinLobbyId] = useState<string>("")
 	const [joinModalVisible, setJoinModalVisible] = useState<boolean>(false)
 
 	function handleCreateLobby() {
-		socket.emit("createLobby")
+		methods.createLobby()
 		socket.on("lobbyCreated", ({ lobbyId, creator }) => {
 			navigate(`/lobby/${lobbyId}`, { state: { creator: creator } })
 		})
@@ -21,7 +22,8 @@ export default function Home() {
 
 	function handleJoinLobby() {
 		if (joinLobbyId.trim()) {
-			socket.emit("requestLobbyAccess", joinLobbyId)
+			methods.requestLobbyAccess(joinLobbyId)
+
 			socket.on("requestAccepted", ({ creator }) => {
 				navigate(`/lobby/${joinLobbyId}`, {
 					state: { creator: creator },

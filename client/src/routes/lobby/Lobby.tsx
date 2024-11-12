@@ -13,10 +13,10 @@ import UsernameForm from "../../components/UsernameForm/UsernameForm"
 import { ICountry, IPlayer } from "../../types/interfaces"
 import { Region } from "../../types/types"
 import { useLocation, useParams } from "react-router-dom"
-import socket from "../../socket"
 import PlayerList from "../../components/PlayerList/PlayerList"
 import Button from "../../components/Button/Button"
 import WrongAnswerDisplay from "../../components/WrongAnswerDisplay/WrongAnswerDisplay"
+import { useSocket } from "../../contexts/SocketManager"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -29,10 +29,10 @@ const continentsData: Record<Region, ICountry[]> = {
 
 export default function Lobby() {
 	const location = useLocation()
+	const { socket, methods, players } = useSocket()
 	const { lobbyId } = useParams()
 	const [playerUsername, setPlayerUsername] = useState<string | null>()
 	const [coutriesList, setCountriesList] = useState<ICountry[]>([])
-	const [userList, setUserList] = useState<IPlayer[]>([])
 	const [isCreator, setIsCreator] = useState<boolean>(false)
 	const [creatorId, setCreatorId] = useState<string>("")
 	const [defaultCountryId, setDefaultCountryId] = useState<number>(0)
@@ -46,10 +46,6 @@ export default function Lobby() {
 		// Check if the current user is the creator
 		setIsCreator(socket.id === creator)
 
-		// Listen for updates to the user list
-		socket.on("updateUserList", (userList) => {
-			setUserList(userList)
-		})
 		socket.on("startGame", ({ countriesList, countryId }) => {
 			console.log("start game", countriesList)
 			setCountriesList(countriesList)
@@ -57,8 +53,8 @@ export default function Lobby() {
 		})
 
 		return () => {
-			socket.emit("leaveLobby", lobbyId, socket.id)
-			socket.off("updateUserList")
+			if(!lobbyId || !socket.id) return
+			methods.leaveLobby(lobbyId, socket.id)
 			socket.off("startGame")
 		}
 	}, [lobbyId])
@@ -70,7 +66,8 @@ export default function Lobby() {
 		setPlayerUsername(username)
 
 		// Join the lobby
-		socket.emit("joinLobby", lobbyId, username)
+		if(!lobbyId) return
+		methods.joinLobby(lobbyId, username)
 	}
 
 	function handlePartySubmit(_event: FormEvent<HTMLFormElement>): void {
@@ -81,8 +78,8 @@ export default function Lobby() {
 			tempCountriesList.push(...continentsData[key as Region])
 		}
 
-		// emit
-		socket.emit("submitLobby", lobbyId, tempCountriesList)
+		if(!lobbyId) return
+		methods.setupGame(lobbyId, tempCountriesList)
 	}
 
 	function renderContent() {
@@ -95,7 +92,7 @@ export default function Lobby() {
 							countriesList={coutriesList}
 							defaultCountryId={defaultCountryId}
 						/>
-						<ScoreBoard playerList={userList} />
+						<ScoreBoard playerList={players} />
 					</>
 				)
 			} else {
@@ -106,7 +103,7 @@ export default function Lobby() {
 								<h2>Créez votre quizz:</h2>
 								<Lobbyform onSubmit={handlePartySubmit} />
 							</section>
-							<ScoreBoard playerList={userList} />
+							<ScoreBoard playerList={players} />
 						</>
 					)
 				} else {
@@ -115,7 +112,7 @@ export default function Lobby() {
 							<section className="lobby__list">
 								<h2>Lobby</h2>
 								<PlayerList
-									list={userList}
+									list={players}
 									creatorId={creatorId}
 									currentId={socket.id ?? ""}
 								/>

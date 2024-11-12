@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import "./wronganswerdisplay.scss"
-import socket from "../../socket"
+import { useSocket } from "../../contexts/SocketManager"
 
 interface IAnswer {
 	id: number
@@ -22,6 +22,7 @@ function generateRandomCoords() {
 
 export default function WrongAnswerDisplay() {
 	const [answers, setAnswers] = useState<IAnswer[]>([])
+	const { socket } = useSocket()
 
 	useEffect(() => {
 		socket.on("wrongAnswer", (answer: string) => {

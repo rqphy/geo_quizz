@@ -7,17 +7,20 @@ import Header from "./components/Header/Header.tsx"
 import MultiPlayer from "./routes/multiplayer/MultiPlayer.tsx"
 import SinglePlayer from "./routes/singleplayer/SinglePlayer.tsx"
 import Lobby from "./routes/lobby/Lobby.tsx"
+import { SocketProvider } from "./contexts/SocketManager.tsx"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-	<React.StrictMode>
-		<BrowserRouter>
-			<Header />
-			<Routes>
-				<Route index element={<Home />} />
-				<Route path="/singleplayer" element={<SinglePlayer />} />
-				<Route path="/lobby/:lobbyId" element={<Lobby />} />
-				<Route path="/room/:roomId" element={<MultiPlayer />} />
-			</Routes>
-		</BrowserRouter>
-	</React.StrictMode>
+	<SocketProvider>
+		<React.StrictMode>
+			<BrowserRouter>
+				<Header />
+				<Routes>
+					<Route index element={<Home />} />
+					<Route path="/singleplayer" element={<SinglePlayer />} />
+					<Route path="/lobby/:lobbyId" element={<Lobby />} />
+					<Route path="/room/:roomId" element={<MultiPlayer />} />
+				</Routes>
+			</BrowserRouter>
+		</React.StrictMode>
+	</SocketProvider>
 )

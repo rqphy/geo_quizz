@@ -4,7 +4,7 @@ import Question from "../Question/Question"
 import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
 import "./quizz.scss"
-import socket from "../../socket"
+import { useSocket } from "../../contexts/SocketManager"
 
 interface IQuizzProps {
 	countriesList: ICountry[]
@@ -20,6 +20,7 @@ export default function Quizz({
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
+	const { socket } = useSocket()
 
 	useEffect(() => {
 		socket.on(

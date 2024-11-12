@@ -27,6 +27,7 @@ io.on("connection", (socket) => {
 
 	// Create Lobby
 	socket.on("createLobby", () => {
+		console.log("create lobby asked")
 		const lobbyId = uuidv4() // Generate unique lobby ID
 		lobbies[lobbyId] = { users: [], creator: socket.id } // Init lobby with empty user
 		// socket.join(lobbyId) // Have the user join the lobby
@@ -86,7 +87,7 @@ io.on("connection", (socket) => {
 		// lobbies[lobbyId].users = lobbies[lobbyId].users.filter(user => user.uuid !== userId)
 	})
 
-	socket.on("submitLobby", (lobbyId, countriesList, lastCountryId) => {
+	socket.on("setupGame", (lobbyId, countriesList, lastCountryId) => {
 		// Init round
 		lobbies[lobbyId].round = 1
 		lobbies[lobbyId].countriesList = countriesList
@@ -139,13 +140,13 @@ io.on("connection", (socket) => {
 					(user) => user.uuid !== socket.id
 				)
 
+				// Update users list
+				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+
 				// Delete lobby if empty
 				if (lobbies[lobbyId].users.length === 0) {
 					delete lobbies[lobbyId]
 				}
-
-				// Update users list
-				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 			}
 		}
 	})
