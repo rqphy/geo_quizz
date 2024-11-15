@@ -52,6 +52,11 @@ export default function Lobby() {
 			setDefaultCountryId(countryId)
 		})
 
+		socket.on("updateCreator", (newCreatorId) => {
+			setCreatorId(newCreatorId)
+			setIsCreator(socket.id === newCreatorId)
+		})
+
 		return () => {
 			if (!lobbyId || !socket.id) return
 			methods.leaveLobby(lobbyId, socket.id)

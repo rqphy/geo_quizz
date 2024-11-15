@@ -143,6 +143,16 @@ io.on("connection", (socket) => {
 					return
 				}
 
+				// Define new creator
+				if (socket.id === lobbies[lobbyId].creator) {
+					// Get another user id
+					const newCreator = lobbies[lobbyId].users[0].uuid
+
+					// Update room creator
+					lobbies[lobbyId].creator = newCreator
+					io.to(lobbyId).emit("updateCreator", newCreator)
+				}
+
 				// Update users list
 				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 			}
@@ -168,6 +178,17 @@ io.on("connection", (socket) => {
 					console.log(`Lobby: ${lobbyId} was empty and got deleted`)
 					delete lobbies[lobbyId]
 					return
+				}
+
+				// Define new creator
+				if (socket.id === lobbies[lobbyId].creator) {
+					// Get another user id
+					const newCreator = lobbies[lobbyId].users[0].uuid
+
+					// Update room creator
+					lobbies[lobbyId].creator = newCreator
+
+					io.to(lobbyId).emit("updateCreator", newCreator)
 				}
 
 				// Update users list
