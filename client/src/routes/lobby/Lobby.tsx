@@ -53,7 +53,7 @@ export default function Lobby() {
 		})
 
 		return () => {
-			if(!lobbyId || !socket.id) return
+			if (!lobbyId || !socket.id) return
 			methods.leaveLobby(lobbyId, socket.id)
 			socket.off("startGame")
 		}
@@ -66,7 +66,7 @@ export default function Lobby() {
 		setPlayerUsername(username)
 
 		// Join the lobby
-		if(!lobbyId) return
+		if (!lobbyId) return
 		methods.joinLobby(lobbyId, username)
 	}
 
@@ -78,7 +78,7 @@ export default function Lobby() {
 			tempCountriesList.push(...continentsData[key as Region])
 		}
 
-		if(!lobbyId) return
+		if (!lobbyId) return
 		methods.setupGame(lobbyId, tempCountriesList)
 	}
 

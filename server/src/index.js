@@ -23,11 +23,10 @@ function generateRandomCountryId(listLength, lastCountryId) {
 io.listen(3000)
 
 io.on("connection", (socket) => {
-	console.log("user connected", socket.rooms)
+	console.log(`User ${socket.id} connected`)
 
 	// Create Lobby
 	socket.on("createLobby", () => {
-		console.log("create lobby asked")
 		const lobbyId = uuidv4() // Generate unique lobby ID
 		lobbies[lobbyId] = { users: [], creator: socket.id } // Init lobby with empty user
 		// socket.join(lobbyId) // Have the user join the lobby
@@ -35,11 +34,12 @@ io.on("connection", (socket) => {
 
 		// Emit back to the client
 		socket.emit("lobbyCreated", { lobbyId, creator: socket.id })
-		console.log("Lobby created with ID:", lobbyId)
+		console.log(`User ${socket.id} created a new lobby: ${lobbyId}`)
 	})
 
 	// Request join lobby
 	socket.on("requestLobbyAccess", (lobbyId) => {
+		console.log(`User ${socket.id} requested to join lobby: ${lobbyId}`)
 		if (
 			lobbies[lobbyId] &&
 			!lobbies[lobbyId].users.some((user) => user.uuid === socket.id)
@@ -60,7 +60,6 @@ io.on("connection", (socket) => {
 			!lobbies[lobbyId].users.some((user) => user.uuid === socket.id)
 		) {
 			socket.join(lobbyId)
-			console.log(socket.rooms, lobbyId)
 			lobbies[lobbyId].users.push({
 				uuid: socket.id,
 				name: username,
@@ -81,12 +80,7 @@ io.on("connection", (socket) => {
 		}
 	})
 
-	// leave lobby
-	socket.on("leaveLobby", (lobbyId, playerId) => {
-		console.log(lobbyId, playerId)
-		// lobbies[lobbyId].users = lobbies[lobbyId].users.filter(user => user.uuid !== userId)
-	})
-
+	// Start game with prefered settings
 	socket.on("setupGame", (lobbyId, countriesList, lastCountryId) => {
 		// Init round
 		lobbies[lobbyId].round = 1
@@ -127,13 +121,38 @@ io.on("connection", (socket) => {
 		io.to(lobbyId).emit("wrongAnswer", answer)
 	})
 
+	// leave lobby
+	socket.on("leaveLobby", (lobbyId, playerId) => {
+		// Check if lobby exist
+		if (lobbies[lobbyId]) {
+			// Check if user is in it
+			if (
+				lobbies[lobbyId].users.filter((user) => user.uuid === socket.id)
+					.length > 0
+			) {
+				// Remove user
+				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
+					(user) => user.uuid !== socket.id
+				)
+				// Update users list
+				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+				console.log(`User ${socket.id} has left the lobby: ${lobbyId}`)
+				// Delete lobby if empty
+				if (lobbies[lobbyId].users.length === 0) {
+					console.log(`Lobby: ${lobbyId} was empty and got deleted`)
+					delete lobbies[lobbyId]
+				}
+			}
+		}
+	})
+
 	socket.on("disconnect", () => {
-		console.log("user disconnected", socket.rooms, socket.id)
+		console.log(`User ${socket.id} disconnected`)
 
 		// Remove user from any lobbies they were in
 		for (const lobbyId in lobbies) {
 			if (
-				lobbies[lobbyId].users.filter((user) => user.uuid == socket.id)
+				lobbies[lobbyId].users.filter((user) => user.uuid === socket.id)
 					.length > 0
 			) {
 				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
@@ -142,9 +161,11 @@ io.on("connection", (socket) => {
 
 				// Update users list
 				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+				console.log(`User ${socket.id} has left the lobby: ${lobbyId}`)
 
 				// Delete lobby if empty
 				if (lobbies[lobbyId].users.length === 0) {
+					console.log(`Lobby: ${lobbyId} was empty and got deleted`)
 					delete lobbies[lobbyId]
 				}
 			}
