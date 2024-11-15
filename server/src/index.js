@@ -20,6 +20,46 @@ function generateRandomCountryId(listLength, lastCountryId) {
 	return newCountryId
 }
 
+function handlePlayerLeavingLobby(lobbyId, playerId) {
+	// Check if lobby exist
+	if (lobbies[lobbyId]) {
+		// Check if user is in it
+		if (
+			lobbies[lobbyId].users.filter((user) => user.uuid === playerId)
+				.length > 0
+		) {
+			// Remove user
+			lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
+				(user) => user.uuid !== playerId
+			)
+			console.log(`User ${playerId} has left the lobby: ${lobbyId}`)
+
+			// Delete lobby if empty
+			if (lobbies[lobbyId].users.length === 0) {
+				console.log(`Lobby: ${lobbyId} was empty and got deleted`)
+				delete lobbies[lobbyId]
+				return
+			}
+
+			// Define new creator
+			if (playerId === lobbies[lobbyId].creator) {
+				// Get another user id
+				const newCreator = lobbies[lobbyId].users[0].uuid
+				console.log(
+					`Lobby: ${lobbyId} has a new creator: ${newCreator}`
+				)
+
+				// Update room creator
+				lobbies[lobbyId].creator = newCreator
+				io.to(lobbyId).emit("updateCreator", newCreator)
+			}
+
+			// Update users list
+			io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+		}
+	}
+}
+
 io.listen(3000)
 
 io.on("connection", (socket) => {
@@ -123,40 +163,7 @@ io.on("connection", (socket) => {
 
 	// leave lobby
 	socket.on("leaveLobby", (lobbyId, playerId) => {
-		// Check if lobby exist
-		if (lobbies[lobbyId]) {
-			// Check if user is in it
-			if (
-				lobbies[lobbyId].users.filter((user) => user.uuid === socket.id)
-					.length > 0
-			) {
-				// Remove user
-				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
-					(user) => user.uuid !== socket.id
-				)
-				console.log(`User ${socket.id} has left the lobby: ${lobbyId}`)
-
-				// Delete lobby if empty
-				if (lobbies[lobbyId].users.length === 0) {
-					console.log(`Lobby: ${lobbyId} was empty and got deleted`)
-					delete lobbies[lobbyId]
-					return
-				}
-
-				// Define new creator
-				if (socket.id === lobbies[lobbyId].creator) {
-					// Get another user id
-					const newCreator = lobbies[lobbyId].users[0].uuid
-
-					// Update room creator
-					lobbies[lobbyId].creator = newCreator
-					io.to(lobbyId).emit("updateCreator", newCreator)
-				}
-
-				// Update users list
-				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
-			}
-		}
+		handlePlayerLeavingLobby(lobbyId, playerId)
 	})
 
 	socket.on("disconnect", () => {
@@ -164,36 +171,7 @@ io.on("connection", (socket) => {
 
 		// Remove user from any lobbies they were in
 		for (const lobbyId in lobbies) {
-			if (
-				lobbies[lobbyId].users.filter((user) => user.uuid === socket.id)
-					.length > 0
-			) {
-				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
-					(user) => user.uuid !== socket.id
-				)
-				console.log(`User ${socket.id} has left the lobby: ${lobbyId}`)
-
-				// Delete lobby if empty
-				if (lobbies[lobbyId].users.length === 0) {
-					console.log(`Lobby: ${lobbyId} was empty and got deleted`)
-					delete lobbies[lobbyId]
-					return
-				}
-
-				// Define new creator
-				if (socket.id === lobbies[lobbyId].creator) {
-					// Get another user id
-					const newCreator = lobbies[lobbyId].users[0].uuid
-
-					// Update room creator
-					lobbies[lobbyId].creator = newCreator
-
-					io.to(lobbyId).emit("updateCreator", newCreator)
-				}
-
-				// Update users list
-				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
-			}
+			handlePlayerLeavingLobby(lobbyId, socket.id)
 		}
 	})
 })
