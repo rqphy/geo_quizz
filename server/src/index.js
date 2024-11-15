@@ -134,14 +134,17 @@ io.on("connection", (socket) => {
 				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
 					(user) => user.uuid !== socket.id
 				)
-				// Update users list
-				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 				console.log(`User ${socket.id} has left the lobby: ${lobbyId}`)
+
 				// Delete lobby if empty
 				if (lobbies[lobbyId].users.length === 0) {
 					console.log(`Lobby: ${lobbyId} was empty and got deleted`)
 					delete lobbies[lobbyId]
+					return
 				}
+
+				// Update users list
+				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 			}
 		}
 	})
@@ -158,16 +161,17 @@ io.on("connection", (socket) => {
 				lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
 					(user) => user.uuid !== socket.id
 				)
-
-				// Update users list
-				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 				console.log(`User ${socket.id} has left the lobby: ${lobbyId}`)
 
 				// Delete lobby if empty
 				if (lobbies[lobbyId].users.length === 0) {
 					console.log(`Lobby: ${lobbyId} was empty and got deleted`)
 					delete lobbies[lobbyId]
+					return
 				}
+
+				// Update users list
+				io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 			}
 		}
 	})
