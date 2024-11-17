@@ -17,6 +17,7 @@ import PlayerList from "../../components/PlayerList/PlayerList"
 import Button from "../../components/Button/Button"
 import WrongAnswerDisplay from "../../components/WrongAnswerDisplay/WrongAnswerDisplay"
 import { useSocket } from "../../contexts/SocketManager"
+import { round } from "three/webgpu"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -91,13 +92,18 @@ export default function Lobby() {
 	function handlePartySubmit(_event: FormEvent<HTMLFormElement>): void {
 		_event.preventDefault()
 		const submittedContinentList = new FormData(_event.currentTarget)
+		console.log(submittedContinentList)
+		let roundLimit = submittedContinentList.get("roundLimit")
 		const tempCountriesList: ICountry[] = []
 		for (const key of [...submittedContinentList.keys()]) {
-			tempCountriesList.push(...continentsData[key as Region])
+			if (key !== "roundLimit") {
+				tempCountriesList.push(...continentsData[key as Region])
+			}
 		}
 
 		if (!lobbyId) return
-		methods.setupGame(lobbyId, tempCountriesList)
+		console.log(roundLimit)
+		methods.setupGame(lobbyId, tempCountriesList, roundLimit)
 	}
 
 	function renderContent() {

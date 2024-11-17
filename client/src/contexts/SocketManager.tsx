@@ -14,7 +14,11 @@ interface ISocketProviderMethods {
 	requestLobbyAccess: (lobbyId: string) => void
 	joinLobby: (lobbyId: string, username: string) => void
 	leaveLobby: (lobbyId: string, userId: string) => void
-	setupGame: (lobbyId: string, countriesList: ICountry[]) => void
+	setupGame: (
+		lobbyId: string,
+		countriesList: ICountry[],
+		roundLimit: number
+	) => void
 	goodAnswer: (lobbyId: string, userId: string) => void
 	badAnswer: (lobbyId: string, answer: string) => void
 }
@@ -72,8 +76,12 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 		leaveLobby(lobbyId: string, userId: string): void {
 			socket.emit("leaveLobby", lobbyId, userId)
 		},
-		setupGame(lobbyId: string, countriesList: ICountry[]): void {
-			socket.emit("setupGame", lobbyId, countriesList)
+		setupGame(
+			lobbyId: string,
+			countriesList: ICountry[],
+			roundLimit: string
+		): void {
+			socket.emit("setupGame", lobbyId, countriesList, roundLimit)
 		},
 		goodAnswer(lobbyId: string, userId: string): void {
 			socket.emit("goodAnswer", lobbyId, userId)

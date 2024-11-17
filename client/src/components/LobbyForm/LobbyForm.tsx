@@ -13,6 +13,7 @@ interface ILobbyForm {
 export default function LobbyForm({ onSubmit }: ILobbyForm) {
 	const { lobbyId } = useParams()
 
+	const [roundLimit, setRoundLimit] = useState<number>(20)
 	const [checkAll, setCheckAll] = useState<boolean>(false)
 	const [noneChecked, setNoneChecked] = useState<boolean>(true)
 	const [inviteModalVisible, setInviteModalVisible] = useState<boolean>(false)
@@ -22,6 +23,10 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 			checked: false,
 		}))
 	)
+
+	function updateRoundLimit(_event) {
+		setRoundLimit(_event.target.value)
+	}
 
 	function updateNoneCheck(
 		updatedItems: { checked: any; label: string; slug: string }[]
@@ -91,10 +96,25 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 					}
 				/>
 			))}
+			<label htmlFor="roundLimit">Nombre de manches : {roundLimit}</label>
+			<input
+				type="range"
+				onChange={updateRoundLimit}
+				id="roundLimit"
+				name="roundLimit"
+				min={5}
+				max={40}
+				step={5}
+				value={roundLimit}
+			/>
 			<Button label="Jouer" className={`${noneChecked && "disabled"}`} />
 			<Button label="Inviter" className="invite" onClick={handleInvite} />
 			{inviteModalVisible && (
-				<Modal value={lobbyId} label="Copier" handleAction={handleCopyLink} />
+				<Modal
+					value={lobbyId}
+					label="Copier"
+					handleAction={handleCopyLink}
+				/>
 			)}
 		</form>
 	)
