@@ -37,6 +37,7 @@ export default function Lobby() {
 	const [isCreator, setIsCreator] = useState<boolean>(false)
 	const [creatorId, setCreatorId] = useState<string>("")
 	const [defaultCountryId, setDefaultCountryId] = useState<number>(0)
+	const [isGameOn, setIsGameOn] = useState<boolean>(false)
 
 	useEffect(() => {
 		// Check if creator
@@ -51,6 +52,7 @@ export default function Lobby() {
 			console.log("start game", countriesList)
 			setCountriesList(countriesList)
 			setDefaultCountryId(countryId)
+			setIsGameOn(true)
 		})
 
 		socket.on("updateCreator", (newCreatorId) => {
@@ -60,6 +62,10 @@ export default function Lobby() {
 
 		socket.on("error", (error) => {
 			navigate("/")
+		})
+
+		socket.on("endGame", () => {
+			setIsGameOn(false)
 		})
 
 		return () => {
@@ -97,16 +103,24 @@ export default function Lobby() {
 	function renderContent() {
 		if (playerUsername) {
 			if (coutriesList.length > 1) {
-				return (
-					<>
-						<WrongAnswerDisplay />
-						<Quizz
-							countriesList={coutriesList}
-							defaultCountryId={defaultCountryId}
-						/>
-						<ScoreBoard playerList={players} />
-					</>
-				)
+				if (isGameOn) {
+					return (
+						<>
+							<WrongAnswerDisplay />
+							<Quizz
+								countriesList={coutriesList}
+								defaultCountryId={defaultCountryId}
+							/>
+							<ScoreBoard playerList={players} />
+						</>
+					)
+				} else {
+					return (
+						<>
+							<h2>Game ended</h2>
+						</>
+					)
+				}
 			} else {
 				if (isCreator) {
 					return (

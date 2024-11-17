@@ -9,6 +9,7 @@ const io = new Server({
 })
 
 const lobbies = {}
+const defaultRoundLimit = 5
 
 function generateRandomCountryId(listLength, lastCountryId) {
 	let newCountryId = Math.round(Math.random() * (listLength - 1))
@@ -68,7 +69,11 @@ io.on("connection", (socket) => {
 	// Create Lobby
 	socket.on("createLobby", () => {
 		const lobbyId = uuidv4() // Generate unique lobby ID
-		lobbies[lobbyId] = { users: [], creator: socket.id } // Init lobby with empty user
+		lobbies[lobbyId] = {
+			users: [],
+			creator: socket.id,
+			roundLimit: defaultRoundLimit,
+		} // Init lobby with empty user
 		// socket.join(lobbyId) // Have the user join the lobby
 		// lobbies[lobbyId].users.push(socket.id) // Add the user to the lobby's users
 
@@ -139,22 +144,30 @@ io.on("connection", (socket) => {
 		// Update values
 		lobbies[lobbyId].round += 1
 		const roundCount = lobbies[lobbyId].round
-		const countryId = generateRandomCountryId(
-			lobbies[lobbyId].countriesList.length,
-			0 // Random countryId
-		)
-		const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
 
 		// Update score
 		lobbies[lobbyId].users.find((user) => user.uuid === playerId).score += 1
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
-		// Start new Round
-		io.to(lobbyId).emit("startNewRound", {
-			serverRoundCount: roundCount,
-			countryId,
-			gamemode,
-		})
+		if (roundCount <= lobbies[lobbyId].roundLimit) {
+			// Start new Round
+			const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
+			const countryId = generateRandomCountryId(
+				lobbies[lobbyId].countriesList.length,
+				lobbies[lobbyId].lastCountryId ?? 0 // Random countryId
+			)
+
+			lobbies[lobbyId].lastCountryId = countryId
+
+			io.to(lobbyId).emit("startNewRound", {
+				serverRoundCount: roundCount,
+				countryId,
+				gamemode,
+			})
+		} else {
+			// Game end
+			io.to(lobbyId).emit("endGame")
+		}
 	})
 
 	socket.on("badAnswer", (lobbyId, answer) => {
