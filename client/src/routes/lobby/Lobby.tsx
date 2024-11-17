@@ -92,7 +92,6 @@ export default function Lobby() {
 	function handlePartySubmit(_event: FormEvent<HTMLFormElement>): void {
 		_event.preventDefault()
 		const submittedContinentList = new FormData(_event.currentTarget)
-		console.log(submittedContinentList)
 		let roundLimit = submittedContinentList.get("roundLimit") ?? "20"
 		const tempCountriesList: ICountry[] = []
 		for (const key of [...submittedContinentList.keys()]) {
@@ -102,7 +101,6 @@ export default function Lobby() {
 		}
 
 		if (!lobbyId) return
-		console.log(roundLimit)
 		methods.setupGame(lobbyId, tempCountriesList, roundLimit as string)
 	}
 

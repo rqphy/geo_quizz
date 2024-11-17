@@ -136,10 +136,6 @@ io.on("connection", (socket) => {
 			0 // Random country Id
 		)
 
-		console.log("=================")
-		console.log(roundLimit)
-		console.log("=================")
-
 		// Start game
 		io.to(lobbyId).emit("startGame", { countriesList, countryId })
 		console.log(`Lobby ${lobbyId} started the game`)
