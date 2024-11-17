@@ -17,7 +17,7 @@ interface ISocketProviderMethods {
 	setupGame: (
 		lobbyId: string,
 		countriesList: ICountry[],
-		roundLimit: number
+		roundLimit: string
 	) => void
 	goodAnswer: (lobbyId: string, userId: string) => void
 	badAnswer: (lobbyId: string, answer: string) => void
