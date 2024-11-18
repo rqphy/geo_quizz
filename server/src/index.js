@@ -14,11 +14,12 @@ const minRoundLimit = 5
 const maxRoundLimit = 40
 
 function generateRandomCountryId(listLength, lastCountriesId) {
-	let newCountryId = Math.round(Math.random() * (listLength - 1))
+	console.log(lastCountriesId)
+	let newCountryId
 
-	while (lastCountriesId.includes(newCountryId)) {
+	do {
 		newCountryId = Math.round(Math.random() * (listLength - 1))
-	}
+	} while (lastCountriesId.includes(newCountryId))
 
 	return newCountryId
 }
@@ -129,7 +130,10 @@ io.on("connection", (socket) => {
 	socket.on("setupGame", (lobbyId, countriesList, roundLimit) => {
 		// Init round
 		lobbies[lobbyId].round = 1
-		lobbies[lobbyId].roundLimit = Math.min(Math.max(Number(roundLimit), minRoundLimit), maxRoundLimit)
+		lobbies[lobbyId].roundLimit = Math.min(
+			Math.max(Number(roundLimit), minRoundLimit),
+			maxRoundLimit
+		)
 		lobbies[lobbyId].countriesList = countriesList
 		lobbies[lobbyId].lastCountriesId = []
 		const countryId = generateRandomCountryId(
