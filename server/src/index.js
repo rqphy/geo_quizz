@@ -14,7 +14,6 @@ const minRoundLimit = 5
 const maxRoundLimit = 40
 
 function generateRandomCountryId(listLength, lastCountriesId) {
-	console.log(lastCountriesId)
 	let newCountryId
 
 	do {
