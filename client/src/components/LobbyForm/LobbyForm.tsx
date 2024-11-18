@@ -10,10 +10,12 @@ interface ILobbyForm {
 	onSubmit: (_event: FormEvent<HTMLFormElement>) => void
 }
 
+const defaultRoundLimit = 5 // gotta update server side too
+
 export default function LobbyForm({ onSubmit }: ILobbyForm) {
 	const { lobbyId } = useParams()
 
-	const [roundLimit, setRoundLimit] = useState<number>(20)
+	const [roundLimit, setRoundLimit] = useState<number>(defaultRoundLimit)
 	const [checkAll, setCheckAll] = useState<boolean>(false)
 	const [noneChecked, setNoneChecked] = useState<boolean>(true)
 	const [inviteModalVisible, setInviteModalVisible] = useState<boolean>(false)
@@ -24,7 +26,7 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 		}))
 	)
 
-	function updateRoundLimit(_event) {
+	function updateRoundLimit(_event: any) {
 		setRoundLimit(_event.target.value)
 	}
 

@@ -9,7 +9,7 @@ const io = new Server({
 })
 
 const lobbies = {}
-const defaultRoundLimit = 5
+const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
 

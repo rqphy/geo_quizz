@@ -17,6 +17,7 @@ import PlayerList from "../../components/PlayerList/PlayerList"
 import Button from "../../components/Button/Button"
 import WrongAnswerDisplay from "../../components/WrongAnswerDisplay/WrongAnswerDisplay"
 import { useSocket } from "../../contexts/SocketManager"
+import FinalScore from "../../components/FinalScore/FinalScore"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -121,6 +122,7 @@ export default function Lobby() {
 					return (
 						<>
 							<h2>Game ended</h2>
+							<FinalScore playerList={players} />
 						</>
 					)
 				}

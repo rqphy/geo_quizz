@@ -1,0 +1,30 @@
+.finalscore {
+	width: 300px;
+	margin-top: 2rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	&__player {
+		display: flex;
+		justify-content: space-between;
+		padding: 0.5rem 2rem;
+		width: 100%;
+		background-color: var(--color-tertiary-40);
+
+		&:nth-child(1) {
+			background-color: var(--color-gold);
+			padding: 1.5rem 2rem;
+			font-size: 1.3rem;
+		}
+		&:nth-child(2) {
+			background-color: var(--color-silver);
+			padding: 1.3rem 2rem;
+			font-size: 1.2rem;
+		}
+		&:nth-child(3) {
+			background-color: var(--color-bronze);
+			padding: 1.1rem 2rem;
+			font-size: 1.1rem;
+		}
+	}
+}
