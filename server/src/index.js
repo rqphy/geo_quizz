@@ -10,6 +10,8 @@ const io = new Server({
 
 const lobbies = {}
 const defaultRoundLimit = 5
+const minRoundLimit = 5
+const maxRoundLimit = 40
 
 function generateRandomCountryId(listLength, lastCountriesId) {
 	let newCountryId = Math.round(Math.random() * (listLength - 1))
@@ -74,8 +76,6 @@ io.on("connection", (socket) => {
 			creator: socket.id,
 			roundLimit: defaultRoundLimit,
 		} // Init lobby with empty user
-		// socket.join(lobbyId) // Have the user join the lobby
-		// lobbies[lobbyId].users.push(socket.id) // Add the user to the lobby's users
 
 		// Emit back to the client
 		socket.emit("lobbyCreated", { lobbyId, creator: socket.id })
@@ -129,12 +129,12 @@ io.on("connection", (socket) => {
 	socket.on("setupGame", (lobbyId, countriesList, roundLimit) => {
 		// Init round
 		lobbies[lobbyId].round = 1
-		lobbies[lobbyId].roundLimit = Number(roundLimit)
+		lobbies[lobbyId].roundLimit = Math.min(Math.max(Number(roundLimit), minRoundLimit), maxRoundLimit)
 		lobbies[lobbyId].countriesList = countriesList
 		lobbies[lobbyId].lastCountriesId = []
 		const countryId = generateRandomCountryId(
 			countriesList.length,
-			lobbies[lobbyId].lastCountriesId // Random country Id
+			lobbies[lobbyId].lastCountriesId
 		)
 
 		// Start game

@@ -17,7 +17,6 @@ import PlayerList from "../../components/PlayerList/PlayerList"
 import Button from "../../components/Button/Button"
 import WrongAnswerDisplay from "../../components/WrongAnswerDisplay/WrongAnswerDisplay"
 import { useSocket } from "../../contexts/SocketManager"
-import { round } from "three/webgpu"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -61,7 +60,7 @@ export default function Lobby() {
 			setIsCreator(socket.id === newCreatorId)
 		})
 
-		socket.on("error", (error) => {
+		socket.on("error", () => {
 			navigate("/")
 		})
 
