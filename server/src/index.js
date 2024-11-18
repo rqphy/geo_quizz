@@ -11,11 +11,11 @@ const io = new Server({
 const lobbies = {}
 const defaultRoundLimit = 5
 
-function generateRandomCountryId(listLength, lastCountryId) {
+function generateRandomCountryId(listLength, lastCountriesId) {
 	let newCountryId = Math.round(Math.random() * (listLength - 1))
 
-	if (newCountryId === lastCountryId) {
-		newCountryId++
+	while (lastCountriesId.includes(newCountryId)) {
+		newCountryId = Math.round(Math.random() * (listLength - 1))
 	}
 
 	return newCountryId
@@ -131,9 +131,10 @@ io.on("connection", (socket) => {
 		lobbies[lobbyId].round = 1
 		lobbies[lobbyId].roundLimit = Number(roundLimit)
 		lobbies[lobbyId].countriesList = countriesList
+		lobbies[lobbyId].lastCountriesId = []
 		const countryId = generateRandomCountryId(
 			countriesList.length,
-			0 // Random country Id
+			lobbies[lobbyId].lastCountriesId // Random country Id
 		)
 
 		// Start game
@@ -155,10 +156,10 @@ io.on("connection", (socket) => {
 			const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
 			const countryId = generateRandomCountryId(
 				lobbies[lobbyId].countriesList.length,
-				lobbies[lobbyId].lastCountryId ?? 0 // Random countryId
+				lobbies[lobbyId].lastCountriesId
 			)
 
-			lobbies[lobbyId].lastCountryId = countryId
+			lobbies[lobbyId].lastCountriesId.push(countryId)
 
 			io.to(lobbyId).emit("startNewRound", {
 				serverRoundCount: roundCount,
