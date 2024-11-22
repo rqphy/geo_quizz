@@ -66,6 +66,7 @@ function handlePlayerLeavingLobby(lobbyId, playerId) {
 io.listen(3000)
 
 io.on("connection", (socket) => {
+	console.log(`=====================`)
 	console.log(`User ${socket.id} connected`)
 
 	// Create Lobby
@@ -186,6 +187,7 @@ io.on("connection", (socket) => {
 
 	socket.on("disconnect", () => {
 		console.log(`User ${socket.id} disconnected`)
+		console.log(`=====================`)
 
 		// Remove user from any lobbies they were in
 		for (const lobbyId in lobbies) {
