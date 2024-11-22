@@ -78,6 +78,13 @@ export default function Lobby() {
 		}
 	}, [lobbyId])
 
+	function handleRestart(_event: any) {
+		_event.preventDefault()
+		console.log("restart")
+		// socket.emit('')
+		setCountriesList([])
+	}
+
 	function handleUsernameSubmit(_event: FormEvent<HTMLFormElement>): void {
 		_event.preventDefault()
 		const submittedName = new FormData(_event.currentTarget).get("username")
@@ -123,6 +130,11 @@ export default function Lobby() {
 						<>
 							<h2>Game ended</h2>
 							<FinalScore playerList={players} />
+							<Button
+								onClick={handleRestart}
+								label="Revenir au lobby"
+								className={`${!isCreator && "disabled"}`}
+							/>
 						</>
 					)
 				}
