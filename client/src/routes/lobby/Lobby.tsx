@@ -80,8 +80,6 @@ export default function Lobby() {
 
 	function handleRestart(_event: any) {
 		_event.preventDefault()
-		console.log("restart")
-		// socket.emit('')
 		setCountriesList([])
 	}
 
