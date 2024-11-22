@@ -43,26 +43,30 @@ export default function Home() {
 					<p className="hero__description">
 						Customisez votre quizz et jouez seul ou à plusieurs.
 					</p>
-					<Button
-						label="Jouer"
-						className="hero__play"
-						onClick={handleCreateLobby}
-					/>
-					<Button
-						label="Rejoindre"
-						className="hero__play"
-						onClick={() => setJoinModalVisible(!joinModalVisible)}
-					/>
-					{joinModalVisible && (
-						<Modal
-							label="Go"
-							handleAction={handleJoinLobby}
-							value={joinLobbyId}
-							onChange={(_event: any) =>
-								setJoinLobbyId(_event.target.value)
+					<div className="hero__buttons">
+						<Button
+							label="Jouer"
+							className="hero__play"
+							onClick={handleCreateLobby}
+						/>
+						<Button
+							label="Rejoindre"
+							className="hero__play"
+							onClick={() =>
+								setJoinModalVisible(!joinModalVisible)
 							}
 						/>
-					)}
+						{joinModalVisible && (
+							<Modal
+								label="Go"
+								handleAction={handleJoinLobby}
+								value={joinLobbyId}
+								onChange={(_event: any) =>
+									setJoinLobbyId(_event.target.value)
+								}
+							/>
+						)}
+					</div>
 				</div>
 				<div className="hero__planet">
 					<Canvas>

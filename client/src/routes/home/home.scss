@@ -51,4 +51,10 @@
 	&__play {
 		width: 200px;
 	}
+
+	&__buttons {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
 }
