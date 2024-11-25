@@ -8,7 +8,7 @@ const io = new Server({
 		origin: process.env.BASE_FRONT_URL,
 		methods: ["GET", "POST"],
 	},
-})i
+})
 
 const lobbies = {}
 const defaultRoundLimit = 5 // gotta update client side too
