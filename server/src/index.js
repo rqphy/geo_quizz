@@ -1,14 +1,20 @@
 import { Server } from "socket.io"
 import { v4 as uuidv4 } from "uuid"
+import dotenv from "dotenv"
 
-const PORT = process.env.PORT || 3000;
+dotenv.config()
+
+const PORT = process.env.PORT || 3000
 
 const io = new Server({
 	cors: {
 		origin: process.env.BASE_FRONT_URL,
 		methods: ["GET", "POST"],
+		credentials: true, // Allow cookies or authentication headers
 	},
 })
+
+console.log(process.env.BASE_FRONT_URL)
 
 const lobbies = {}
 const defaultRoundLimit = 5 // gotta update client side too

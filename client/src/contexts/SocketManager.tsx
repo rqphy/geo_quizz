@@ -30,7 +30,10 @@ interface ISocketContextProps {
 	isConnected: boolean
 }
 const SocketContext = createContext<ISocketContextProps | undefined>(undefined)
-const socket: Socket = io(process.env.REACT_APP_API_URL)
+const socket: Socket = io(process.env.REACT_APP_API_URL, {
+	withCredentials: true,
+	transports: ["websocket"],
+})
 
 interface ISocketProviderProps {
 	children: ReactNode
