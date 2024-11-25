@@ -1,12 +1,14 @@
 import { Server } from "socket.io"
 import { v4 as uuidv4 } from "uuid"
 
+const PORT = process.env.PORT || 3000;
+
 const io = new Server({
 	cors: {
 		origin: process.env.BASE_FRONT_URL,
 		methods: ["GET", "POST"],
 	},
-})
+})i
 
 const lobbies = {}
 const defaultRoundLimit = 5 // gotta update client side too
@@ -63,7 +65,7 @@ function handlePlayerLeavingLobby(lobbyId, playerId) {
 	}
 }
 
-io.listen(3000)
+io.listen(PORT)
 
 io.on("connection", (socket) => {
 	console.log(`=====================`)
