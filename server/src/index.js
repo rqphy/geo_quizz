@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 
 const io = new Server({
 	cors: {
-		origin: "http://localhost:5173",
+		origin: process.env.BASE_FRONT_URL,
 		methods: ["GET", "POST"],
 	},
 })
