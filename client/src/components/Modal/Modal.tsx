@@ -1,5 +1,5 @@
 import "./modal.scss"
-import { MouseEventHandler, useState } from "react"
+import { useState } from "react"
 
 interface IModalProps {
 	value?: string

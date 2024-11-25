@@ -30,7 +30,7 @@ interface ISocketContextProps {
 	isConnected: boolean
 }
 const SocketContext = createContext<ISocketContextProps | undefined>(undefined)
-const socket: Socket = io("http://localhost:3000")
+const socket: Socket = io(process.env.REACT_APP_API_URL)
 
 interface ISocketProviderProps {
 	children: ReactNode
