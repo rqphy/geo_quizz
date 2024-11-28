@@ -3,8 +3,6 @@ import CheckInput from "./CheckInput"
 import continentsList from "../../data/FR/continents.json"
 import { FormEvent, useState } from "react"
 import Button from "../Button/Button"
-import Modal from "../Modal/Modal"
-import { useParams } from "react-router-dom"
 
 interface ILobbyForm {
 	onSubmit: (_event: FormEvent<HTMLFormElement>) => void
@@ -13,12 +11,10 @@ interface ILobbyForm {
 const defaultRoundLimit = 5 // gotta update server side too
 
 export default function LobbyForm({ onSubmit }: ILobbyForm) {
-	const { lobbyId } = useParams()
-
 	const [roundLimit, setRoundLimit] = useState<number>(defaultRoundLimit)
 	const [checkAll, setCheckAll] = useState<boolean>(false)
 	const [noneChecked, setNoneChecked] = useState<boolean>(true)
-	const [inviteModalVisible, setInviteModalVisible] = useState<boolean>(false)
+	const [isCopied, setIsCopied] = useState<boolean>(false)
 	const [items, setItems] = useState(
 		continentsList.map((continent) => ({
 			...continent,
@@ -63,15 +59,15 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 		updateNoneCheck(updatedItems)
 	}
 
-	function handleInvite(_event: any) {
-		_event.preventDefault()
-		setInviteModalVisible(!inviteModalVisible)
-	}
-
 	function handleCopyLink(_event: any) {
 		_event.preventDefault()
-		const copyText: string = lobbyId as string
-		navigator.clipboard.writeText(copyText)
+		setIsCopied(true)
+		const currentUrl = window.location.href
+		navigator.clipboard.writeText(currentUrl)
+
+		setTimeout(() => {
+			setIsCopied(false)
+		}, 3000)
 	}
 
 	return (
@@ -110,14 +106,11 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 				value={roundLimit}
 			/>
 			<Button label="Jouer" className={`${noneChecked && "disabled"}`} />
-			<Button label="Inviter" className="invite" onClick={handleInvite} />
-			{inviteModalVisible && (
-				<Modal
-					value={lobbyId}
-					label="Copier"
-					handleAction={handleCopyLink}
-				/>
-			)}
+			<Button
+				label={isCopied ? "Copié" : "Inviter"}
+				className={`invite ${isCopied && "invite--copied"}`}
+				onClick={handleCopyLink}
+			/>
 		</form>
 	)
 }
