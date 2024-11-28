@@ -119,12 +119,7 @@ io.on("connection", (socket) => {
 				name: username,
 				score: 0,
 			})
-
-			// Notify the other users in the lobby
-			socket.to(lobbyId).emit("userJoined", socket.id)
-
-			// Confirm join
-			socket.emit("lobbyJoined", { lobbyId, creator: socket.id })
+			io.to(lobbyId).emit("updateCreator", lobbies[lobbyId].creator)
 			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
 
 			// Update users list
