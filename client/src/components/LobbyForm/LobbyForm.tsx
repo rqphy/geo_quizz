@@ -3,8 +3,6 @@ import CheckInput from "./CheckInput"
 import continentsList from "../../data/FR/continents.json"
 import { FormEvent, useState } from "react"
 import Button from "../Button/Button"
-import Modal from "../Modal/Modal"
-import { useParams } from "react-router-dom"
 
 interface ILobbyForm {
 	onSubmit: (_event: FormEvent<HTMLFormElement>) => void
@@ -13,8 +11,6 @@ interface ILobbyForm {
 const defaultRoundLimit = 5 // gotta update server side too
 
 export default function LobbyForm({ onSubmit }: ILobbyForm) {
-	const { lobbyId } = useParams()
-
 	const [roundLimit, setRoundLimit] = useState<number>(defaultRoundLimit)
 	const [checkAll, setCheckAll] = useState<boolean>(false)
 	const [noneChecked, setNoneChecked] = useState<boolean>(true)
