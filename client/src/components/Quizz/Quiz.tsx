@@ -3,18 +3,16 @@ import { Gamemode } from "../../types/types"
 import Question from "../Question/Question"
 import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
-import "./quizz.scss"
+import "./quiz.scss"
 import { useSocket } from "../../contexts/SocketManager"
+import Button from "../Button/Button"
 
 interface IQuizzProps {
 	countriesList: ICountry[]
 	defaultCountryId: number
 }
 
-export default function Quizz({
-	countriesList,
-	defaultCountryId,
-}: IQuizzProps) {
+export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	const [countryId, setCountryId] = useState<number>(defaultCountryId)
 	const [gamemode, setGamemode] = useState<Gamemode>("findCountry")
 	const [questionLabel, setQuestionLabel] = useState<string>("")
@@ -43,11 +41,23 @@ export default function Quizz({
 		}
 	}, [countryId, gamemode])
 
+	function handleSkipClick(_event: any) {
+		_event.preventDefault()
+		console.log("skip")
+	}
+
 	return (
-		<div className="quizz">
-			<p className="quizz__roundCount">Round : {roundCount}</p>
+		<div className="quiz">
+			<p className="quiz__roundCount">Round : {roundCount}</p>
 			<Question gamemode={gamemode} roundLabel={questionLabel} />
-			<GameForm expectedAnswer={expectedAnswer} />
+			<div className="quiz__container">
+				<GameForm expectedAnswer={expectedAnswer} />
+				<Button
+					label="Manche suivante"
+					className={`quiz__skip`}
+					onClick={handleSkipClick}
+				/>
+			</div>
 		</div>
 	)
 }

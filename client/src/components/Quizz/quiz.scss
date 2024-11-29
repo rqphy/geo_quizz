@@ -1,0 +1,24 @@
+.quiz {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2rem;
+	margin-top: 5rem;
+
+	&__roundCount {
+		font-size: 1.5rem;
+	}
+
+	&__container {
+		display: flex;
+		gap: 1rem;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	&__skip {
+		width: fit-content;
+		transform: scale(0.9);
+		background-color: var(--color-tertiary);
+	}
+}
