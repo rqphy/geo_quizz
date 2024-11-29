@@ -19,8 +19,9 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
-	const { socket } = useSocket()
-	const { wrongAnswersCount, resetWrongAnswersCount } = useGameStore()
+	const { socket, players } = useSocket()
+	const { isCreator, wrongAnswersCount, resetWrongAnswersCount } =
+		useGameStore()
 
 	useEffect(() => {
 		socket.on(
@@ -55,7 +56,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 			<Question gamemode={gamemode} roundLabel={questionLabel} />
 			<div className="quiz__container">
 				<GameForm expectedAnswer={expectedAnswer} />
-				{wrongAnswersCount >= 10 && (
+				{wrongAnswersCount >= players.length * 4 && isCreator && (
 					<Button
 						label="Manche suivante"
 						className={`quiz__skip`}
