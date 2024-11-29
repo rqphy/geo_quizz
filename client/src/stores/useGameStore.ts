@@ -3,13 +3,15 @@ import { create } from "zustand"
 interface IUseGameStore {
 	isCreator: boolean
 	wrongAnswersCount: number
-	setWrongAnswersCount: (count: number) => void
+	incrementWrongAnswersCount: () => void
+	resetWrongAnswersCount: () => void
 	setIsCreator: (value: boolean) => void
 }
 
 export default create<IUseGameStore>()((set) => ({
 	isCreator: false,
 	wrongAnswersCount: 0,
-	setWrongAnswersCount: (count) => set(() => ({ wrongAnswersCount: count })),
+	incrementWrongAnswersCount: () => set((state) => ({ wrongAnswersCount: state.wrongAnswersCount + 1 })),
+	resetWrongAnswersCount: () => set(() => ({ wrongAnswersCount: 0 })),
 	setIsCreator: (value) => set(() => ({ isCreator: value })),
 }))

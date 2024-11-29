@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import "./quiz.scss"
 import { useSocket } from "../../contexts/SocketManager"
 import Button from "../Button/Button"
+import useGameStore from "../../stores/useGameStore"
 
 interface IQuizzProps {
 	countriesList: ICountry[]
@@ -19,6 +20,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
 	const { socket } = useSocket()
+	const { wrongAnswersCount, resetWrongAnswersCount } = useGameStore()
 
 	useEffect(() => {
 		socket.on(
@@ -27,6 +29,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 				setRoundCount(serverRoundCount)
 				setCountryId(countryId)
 				setGamemode(gamemode)
+				resetWrongAnswersCount()
 			}
 		)
 	}, [])
@@ -52,11 +55,13 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 			<Question gamemode={gamemode} roundLabel={questionLabel} />
 			<div className="quiz__container">
 				<GameForm expectedAnswer={expectedAnswer} />
-				<Button
-					label="Manche suivante"
-					className={`quiz__skip`}
-					onClick={handleSkipClick}
-				/>
+				{wrongAnswersCount >= 10 && (
+					<Button
+						label="Manche suivante"
+						className={`quiz__skip`}
+						onClick={handleSkipClick}
+					/>
+				)}
 			</div>
 		</div>
 	)

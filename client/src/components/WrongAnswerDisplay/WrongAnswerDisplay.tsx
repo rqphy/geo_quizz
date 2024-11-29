@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import "./wronganswerdisplay.scss"
 import { useSocket } from "../../contexts/SocketManager"
+import useGameStore from "../../stores/useGameStore"
 
 interface IAnswer {
 	id: number
@@ -22,6 +23,7 @@ function generateRandomCoords() {
 
 export default function WrongAnswerDisplay() {
 	const [answers, setAnswers] = useState<IAnswer[]>([])
+	const { incrementWrongAnswersCount } = useGameStore()
 	const { socket } = useSocket()
 
 	useEffect(() => {
@@ -32,6 +34,9 @@ export default function WrongAnswerDisplay() {
 				...prevAnswers,
 				{ id: id, text: answer, coords: generateRandomCoords() },
 			])
+
+			// update state
+			incrementWrongAnswersCount()
 
 			// Remove the answer after 5s
 			setTimeout(() => {
