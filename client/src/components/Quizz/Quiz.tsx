@@ -3,6 +3,7 @@ import { Gamemode } from "../../types/types"
 import Question from "../Question/Question"
 import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import "./quiz.scss"
 import { useSocket } from "../../contexts/SocketManager"
 import Button from "../Button/Button"
@@ -19,7 +20,8 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
-	const { socket, players } = useSocket()
+	const { lobbyId } = useParams()
+	const { socket, players, methods } = useSocket()
 	const { isCreator, wrongAnswersCount, resetWrongAnswersCount } =
 		useGameStore()
 
@@ -48,6 +50,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	function handleSkipClick(_event: any) {
 		_event.preventDefault()
 		console.log("skip")
+		methods.newRound(lobbyId as string)
 	}
 
 	return (

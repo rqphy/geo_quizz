@@ -11,7 +11,7 @@ dotenv.config()
 
 const PORT = process.env.PORT || 3000
 
-const io = new Server({
+export const io = new Server({
 	cors: {
 		origin: process.env.BASE_FRONT_URL,
 		methods: ["GET", "POST"],
@@ -19,7 +19,7 @@ const io = new Server({
 	},
 })
 
-const lobbies = {}
+export const lobbies = {}
 const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
@@ -112,6 +112,12 @@ io.on("connection", (socket) => {
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
 		// Start new round
+		startNewRound(lobbyId, roundCount)
+	})
+
+	socket.on("newRound", (lobbyId) => {
+		const roundCount = lobbies[lobbyId].round
+
 		startNewRound(lobbyId, roundCount)
 	})
 

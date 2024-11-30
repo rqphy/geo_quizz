@@ -1,23 +1,25 @@
+import { io, lobbies } from "./index.js"
+
 export function startNewRound(lobbyId, roundCount) {
-    if (roundCount <= lobbies[lobbyId].roundLimit) {
-        // Start new Round
-        const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
-        const countryId = generateRandomCountryId(
-            lobbies[lobbyId].countriesList.length,
-            lobbies[lobbyId].lastCountriesId
-        )
+	if (roundCount <= lobbies[lobbyId].roundLimit) {
+		// Start new Round
+		const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
+		const countryId = generateRandomCountryId(
+			lobbies[lobbyId].countriesList.length,
+			lobbies[lobbyId].lastCountriesId
+		)
 
-        lobbies[lobbyId].lastCountriesId.push(countryId)
+		lobbies[lobbyId].lastCountriesId.push(countryId)
 
-        io.to(lobbyId).emit("startNewRound", {
-            serverRoundCount: roundCount,
-            countryId,
-            gamemode,
-        })
-    } else {
-        // Game end
-        io.to(lobbyId).emit("endGame")
-    }
+		io.to(lobbyId).emit("startNewRound", {
+			serverRoundCount: roundCount,
+			countryId,
+			gamemode,
+		})
+	} else {
+		// Game end
+		io.to(lobbyId).emit("endGame")
+	}
 }
 
 export function generateRandomCountryId(listLength, lastCountriesId) {
