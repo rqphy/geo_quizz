@@ -49,7 +49,6 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 
 	function handleSkipClick(_event: any) {
 		_event.preventDefault()
-		console.log("skip")
 		methods.newRound(lobbyId as string)
 	}
 
