@@ -61,7 +61,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 				<GameForm expectedAnswer={expectedAnswer} />
 				{wrongAnswersCount >= players.length * 4 && isCreator && (
 					<Button
-						label="Manche suivante"
+						label="Nouvelle question"
 						className={`quiz__skip`}
 						onClick={handleSkipClick}
 					/>
