@@ -3,24 +3,27 @@ import { Gamemode } from "../../types/types"
 import Question from "../Question/Question"
 import GameForm from "../GameForm/GameForm"
 import { useEffect, useState } from "react"
-import "./quizz.scss"
+import { useParams } from "react-router-dom"
+import "./quiz.scss"
 import { useSocket } from "../../contexts/SocketManager"
+import Button from "../Button/Button"
+import useGameStore from "../../stores/useGameStore"
 
 interface IQuizzProps {
 	countriesList: ICountry[]
 	defaultCountryId: number
 }
 
-export default function Quizz({
-	countriesList,
-	defaultCountryId,
-}: IQuizzProps) {
+export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	const [countryId, setCountryId] = useState<number>(defaultCountryId)
 	const [gamemode, setGamemode] = useState<Gamemode>("findCountry")
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
-	const { socket } = useSocket()
+	const { lobbyId } = useParams()
+	const { socket, players, methods } = useSocket()
+	const { isCreator, wrongAnswersCount, resetWrongAnswersCount } =
+		useGameStore()
 
 	useEffect(() => {
 		socket.on(
@@ -29,6 +32,7 @@ export default function Quizz({
 				setRoundCount(serverRoundCount)
 				setCountryId(countryId)
 				setGamemode(gamemode)
+				resetWrongAnswersCount()
 			}
 		)
 	}, [])
@@ -43,11 +47,25 @@ export default function Quizz({
 		}
 	}, [countryId, gamemode])
 
+	function handleSkipClick(_event: any) {
+		_event.preventDefault()
+		methods.newRound(lobbyId as string)
+	}
+
 	return (
-		<div className="quizz">
-			<p className="quizz__roundCount">Round : {roundCount}</p>
+		<div className="quiz">
+			<p className="quiz__roundCount">Round : {roundCount}</p>
 			<Question gamemode={gamemode} roundLabel={questionLabel} />
-			<GameForm expectedAnswer={expectedAnswer} />
+			<div className="quiz__container">
+				<GameForm expectedAnswer={expectedAnswer} />
+				{wrongAnswersCount >= players.length * 4 && isCreator && (
+					<Button
+						label="Nouvelle question"
+						className={`quiz__skip`}
+						onClick={handleSkipClick}
+					/>
+				)}
+			</div>
 		</div>
 	)
 }

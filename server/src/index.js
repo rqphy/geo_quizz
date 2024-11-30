@@ -1,12 +1,17 @@
 import { Server } from "socket.io"
 import { v4 as uuidv4 } from "uuid"
 import dotenv from "dotenv"
+import {
+	generateRandomCountryId,
+	startNewRound,
+	handlePlayerLeavingLobby,
+} from "./utils.js"
 
 dotenv.config()
 
 const PORT = process.env.PORT || 3000
 
-const io = new Server({
+export const io = new Server({
 	cors: {
 		origin: process.env.BASE_FRONT_URL,
 		methods: ["GET", "POST"],
@@ -14,62 +19,10 @@ const io = new Server({
 	},
 })
 
-console.log(process.env.BASE_FRONT_URL)
-
-const lobbies = {}
+export const lobbies = {}
 const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
-
-function generateRandomCountryId(listLength, lastCountriesId) {
-	let newCountryId
-
-	do {
-		newCountryId = Math.round(Math.random() * (listLength - 1))
-	} while (lastCountriesId.includes(newCountryId))
-
-	return newCountryId
-}
-
-function handlePlayerLeavingLobby(lobbyId, playerId) {
-	// Check if lobby exist
-	if (lobbies[lobbyId]) {
-		// Check if user is in it
-		if (
-			lobbies[lobbyId].users.filter((user) => user.uuid === playerId)
-				.length > 0
-		) {
-			// Remove user
-			lobbies[lobbyId].users = lobbies[lobbyId].users.filter(
-				(user) => user.uuid !== playerId
-			)
-			console.log(`User ${playerId} has left the lobby: ${lobbyId}`)
-
-			// Delete lobby if empty
-			if (lobbies[lobbyId].users.length === 0) {
-				console.log(`Lobby: ${lobbyId} was empty and got deleted`)
-				delete lobbies[lobbyId]
-				return
-			}
-
-			// Define new creator
-			if (playerId === lobbies[lobbyId].creator) {
-				// Get another user id
-				const newCreator = lobbies[lobbyId].users[0].uuid
-				console.log(
-					`Lobby: ${lobbyId} has a new creator: ${newCreator}`
-				)
-
-				// Update room creator
-				lobbies[lobbyId].creator = newCreator
-				io.to(lobbyId).emit("updateCreator", newCreator)
-			}
-
-			// Update users list
-			io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
-		}
-	}
-}
 
 io.listen(PORT)
 
@@ -158,25 +111,14 @@ io.on("connection", (socket) => {
 		lobbies[lobbyId].users.find((user) => user.uuid === playerId).score += 1
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
-		if (roundCount <= lobbies[lobbyId].roundLimit) {
-			// Start new Round
-			const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
-			const countryId = generateRandomCountryId(
-				lobbies[lobbyId].countriesList.length,
-				lobbies[lobbyId].lastCountriesId
-			)
+		// Start new round
+		startNewRound(lobbyId, roundCount)
+	})
 
-			lobbies[lobbyId].lastCountriesId.push(countryId)
+	socket.on("newRound", (lobbyId) => {
+		const roundCount = lobbies[lobbyId].round
 
-			io.to(lobbyId).emit("startNewRound", {
-				serverRoundCount: roundCount,
-				countryId,
-				gamemode,
-			})
-		} else {
-			// Game end
-			io.to(lobbyId).emit("endGame")
-		}
+		startNewRound(lobbyId, roundCount)
 	})
 
 	socket.on("badAnswer", (lobbyId, answer) => {

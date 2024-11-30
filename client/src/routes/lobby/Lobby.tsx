@@ -8,7 +8,7 @@ import "./lobby.scss"
 import { FormEvent, useEffect, useState } from "react"
 import Lobbyform from "../../components/LobbyForm/LobbyForm"
 import ScoreBoard from "../../components/ScoreBoard/ScoreBoard"
-import Quizz from "../../components/Quizz/Quizz"
+import Quizz from "../../components/Quizz/Quiz"
 import UsernameForm from "../../components/UsernameForm/UsernameForm"
 import { ICountry } from "../../types/interfaces"
 import { Region } from "../../types/types"
@@ -18,6 +18,7 @@ import Button from "../../components/Button/Button"
 import WrongAnswerDisplay from "../../components/WrongAnswerDisplay/WrongAnswerDisplay"
 import { useSocket } from "../../contexts/SocketManager"
 import FinalScore from "../../components/FinalScore/FinalScore"
+import useGameStore from "../../stores/useGameStore"
 
 const continentsData: Record<Region, ICountry[]> = {
 	EU: EuropeFR,
@@ -35,10 +36,10 @@ export default function Lobby() {
 	const { lobbyId } = useParams()
 	const [playerUsername, setPlayerUsername] = useState<string | null>()
 	const [coutriesList, setCountriesList] = useState<ICountry[]>([])
-	const [isCreator, setIsCreator] = useState<boolean>(false)
 	const [creatorId, setCreatorId] = useState<string>("")
 	const [defaultCountryId, setDefaultCountryId] = useState<number>(0)
 	const [isGameOn, setIsGameOn] = useState<boolean>(false)
+	const { isCreator, setIsCreator } = useGameStore()
 
 	useEffect(() => {
 		// Check if creator
