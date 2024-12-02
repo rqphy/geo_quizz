@@ -9,18 +9,25 @@ import { useSocket } from "../../contexts/SocketManager"
 import Button from "../Button/Button"
 import useGameStore from "../../stores/useGameStore"
 import AnswerScreen from "../AnswerScreen/AnswerScreen"
+import Timer from "../Timer/Timer"
 
 interface IQuizzProps {
 	countriesList: ICountry[]
 	defaultCountryId: number
+	firstTargetDate: Date
 }
 
-export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
+export default function Quiz({
+	countriesList,
+	defaultCountryId,
+	firstTargetDate,
+}: IQuizzProps) {
 	const [countryId, setCountryId] = useState<number>(defaultCountryId)
 	const [gamemode, setGamemode] = useState<Gamemode>("findCountry")
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
+	const [targetDate, setTargetDate] = useState<Date>()
 	const [isPaused, setIsPaused] = useState<boolean>(false)
 	const [firstPlayer, setFirstPlayer] = useState<string | null>(null)
 	const [answerTime, setAnswerTime] = useState<string | null>(null)
@@ -30,9 +37,10 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 		useGameStore()
 
 	useEffect(() => {
+		setTargetDate(firstTargetDate)
 		socket.on(
 			"startNewRound",
-			({ serverRoundCount, countryId, gamemode }) => {
+			({ serverRoundCount, countryId, gamemode, targetDate }) => {
 				// reset round variables
 				setIsPaused(false)
 				setFirstPlayer(null)
@@ -42,6 +50,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 				setRoundCount(serverRoundCount)
 
 				// set round variables
+				setTargetDate(targetDate)
 				setCountryId(countryId)
 				setGamemode(gamemode)
 				resetWrongAnswersCount()
@@ -55,6 +64,11 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 				setAnswerTime(time)
 			}
 		})
+
+		return () => {
+			socket.off("startNewRound")
+			socket.off("endRound")
+		}
 	}, [])
 
 	useEffect(() => {
@@ -86,6 +100,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 		} else {
 			return (
 				<>
+					{targetDate && <Timer targetDate={targetDate} />}
 					<p className="quiz__roundCount">Round : {roundCount}</p>
 					<Question gamemode={gamemode} roundLabel={questionLabel} />
 					<div className="quiz__container">

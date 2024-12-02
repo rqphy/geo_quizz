@@ -20,6 +20,7 @@ export const io = new Server({
 })
 
 export const lobbies = {}
+export const roundDuration = 20
 const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
@@ -99,8 +100,10 @@ io.on("connection", (socket) => {
 			lobbies[lobbyId].lastCountriesId
 		)
 
+		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
+
 		// Start game
-		io.to(lobbyId).emit("startGame", { countriesList, countryId })
+		io.to(lobbyId).emit("startGame", { countriesList, countryId, targetDate })
 		console.log(`Lobby ${lobbyId} started the game`)
 	})
 

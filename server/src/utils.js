@@ -1,4 +1,4 @@
-import { io, lobbies } from "./index.js"
+import { io, lobbies, roundDuration } from "./index.js"
 
 export function startNewRound(lobbyId, isNewRound) {
 	if (isNewRound) {
@@ -19,7 +19,6 @@ export function startNewRound(lobbyId, isNewRound) {
 
 		lobbies[lobbyId].lastCountriesId.push(countryId)
 
-		const roundDuration = 20
 		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
 
 		io.to(lobbyId).emit("startNewRound", {
