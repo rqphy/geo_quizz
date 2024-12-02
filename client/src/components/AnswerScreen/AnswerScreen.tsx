@@ -22,7 +22,8 @@ export default function AnswerScreen({
 			</p>
 			{playername && time && (
 				<p className="answerscreen__name">
-					<span>{playername}</span> l'a trouvé en premier en {time}
+					<span>{playername}</span> l'a trouvé en premier en{" "}
+					<span>{time + " "}</span>
 					secondes
 				</p>
 			)}
