@@ -8,6 +8,7 @@ import "./quiz.scss"
 import { useSocket } from "../../contexts/SocketManager"
 import Button from "../Button/Button"
 import useGameStore from "../../stores/useGameStore"
+import AnswerScreen from "../AnswerScreen/AnswerScreen"
 
 interface IQuizzProps {
 	countriesList: ICountry[]
@@ -20,6 +21,7 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	const [questionLabel, setQuestionLabel] = useState<string>("")
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
+	const [isPaused, setIsPaused] = useState<boolean>(false)
 	const { lobbyId } = useParams()
 	const { socket, players, methods } = useSocket()
 	const { isCreator, wrongAnswersCount, resetWrongAnswersCount } =
@@ -52,20 +54,37 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 		methods.newRound(lobbyId as string)
 	}
 
-	return (
-		<div className="quiz">
-			<p className="quiz__roundCount">Round : {roundCount}</p>
-			<Question gamemode={gamemode} roundLabel={questionLabel} />
-			<div className="quiz__container">
-				<GameForm expectedAnswer={expectedAnswer} />
-				{wrongAnswersCount >= players.length * 4 && isCreator && (
-					<Button
-						label="Nouvelle question"
-						className={`quiz__skip`}
-						onClick={handleSkipClick}
-					/>
-				)}
-			</div>
-		</div>
-	)
+	function renderContent() {
+		if (isPaused) {
+			return (
+				<AnswerScreen
+					playername="Toto"
+					answer={expectedAnswer}
+					time="12"
+				>
+					<Question gamemode={gamemode} roundLabel={questionLabel} />
+				</AnswerScreen>
+			)
+		} else {
+			return (
+				<>
+					<p className="quiz__roundCount">Round : {roundCount}</p>
+					<Question gamemode={gamemode} roundLabel={questionLabel} />
+					<div className="quiz__container">
+						<GameForm expectedAnswer={expectedAnswer} />
+						{wrongAnswersCount >= players.length * 4 &&
+							isCreator && (
+								<Button
+									label="Nouvelle question"
+									className={`quiz__skip`}
+									onClick={handleSkipClick}
+								/>
+							)}
+					</div>
+				</>
+			)
+		}
+	}
+
+	return <div className="quiz">{renderContent()}</div>
 }
