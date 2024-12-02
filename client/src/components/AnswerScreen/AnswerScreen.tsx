@@ -2,9 +2,9 @@ import { ReactNode } from "react"
 import "./answerscreen.scss"
 
 interface IAnswerScreenProps {
-	playername?: string
+	playername: string | null
 	answer: string
-	time: string
+	time: string | null
 	children: ReactNode
 }
 
@@ -20,7 +20,7 @@ export default function AnswerScreen({
 			<p className="answerscreen__answer">
 				La réponse était : <span>{answer}</span>
 			</p>
-			{playername && (
+			{playername && time && (
 				<p className="answerscreen__name">
 					<span>{playername}</span> l'a trouvé en premier en {time}
 					secondes

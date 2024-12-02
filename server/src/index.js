@@ -23,6 +23,7 @@ export const lobbies = {}
 const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
+const newRoundDelay = 4000
 
 io.listen(PORT)
 
@@ -37,6 +38,7 @@ io.on("connection", (socket) => {
 			users: [],
 			creator: socket.id,
 			roundLimit: defaultRoundLimit,
+			playersWithGoodAnswer: [],
 		} // Init lobby with empty user
 
 		// Emit back to the client
@@ -103,22 +105,30 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("goodAnswer", (lobbyId, playerId) => {
-		// Update values
-		lobbies[lobbyId].round += 1
-		const roundCount = lobbies[lobbyId].round
-
 		// Update score
-		lobbies[lobbyId].users.find((user) => user.uuid === playerId).score += 1
-		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+		const player = lobbies[lobbyId].users.find(
+			(user) => user.uuid === playerId
+		)
+		player.score += 1 // update system
+		lobbies[lobbyId].playersWithGoodAnswer.push(player.name)
+		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users, player)
 
-		// Start new round
-		startNewRound(lobbyId, roundCount)
+		if (
+			lobbies[lobbyId].users.length ===
+			lobbies[lobbyId].playersWithGoodAnswer.length
+		) {
+			const firstPlayer = lobbies[lobbyId].playersWithGoodAnswer[0]
+			io.to(lobbyId).emit("endRound", firstPlayer, "12")
+
+			// Start new round
+			setTimeout(() => {
+				startNewRound(lobbyId, true)
+			}, newRoundDelay)
+		}
 	})
 
 	socket.on("newRound", (lobbyId) => {
-		const roundCount = lobbies[lobbyId].round
-
-		startNewRound(lobbyId, roundCount)
+		startNewRound(lobbyId, false)
 	})
 
 	socket.on("badAnswer", (lobbyId, answer) => {

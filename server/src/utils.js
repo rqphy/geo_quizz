@@ -1,6 +1,11 @@
 import { io, lobbies } from "./index.js"
 
-export function startNewRound(lobbyId, roundCount) {
+export function startNewRound(lobbyId, isNewRound) {
+	if (isNewRound) {
+		lobbies[lobbyId].round += 1
+	}
+	// Update values
+	const roundCount = lobbies[lobbyId].round
 	if (roundCount <= lobbies[lobbyId].roundLimit) {
 		// Start new Round
 		const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
@@ -8,6 +13,9 @@ export function startNewRound(lobbyId, roundCount) {
 			lobbies[lobbyId].countriesList.length,
 			lobbies[lobbyId].lastCountriesId
 		)
+
+		// reset round variables
+		lobbies[lobbyId].playersWithGoodAnswer = []
 
 		lobbies[lobbyId].lastCountriesId.push(countryId)
 

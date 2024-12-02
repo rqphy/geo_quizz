@@ -22,6 +22,8 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 	const [expectedAnswer, setExpectedAnswer] = useState<string>("")
 	const [roundCount, setRoundCount] = useState<number>(1)
 	const [isPaused, setIsPaused] = useState<boolean>(false)
+	const [firstPlayer, setFirstPlayer] = useState<string | null>(null)
+	const [answerTime, setAnswerTime] = useState<string | null>(null)
 	const { lobbyId } = useParams()
 	const { socket, players, methods } = useSocket()
 	const { isCreator, wrongAnswersCount, resetWrongAnswersCount } =
@@ -31,12 +33,28 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 		socket.on(
 			"startNewRound",
 			({ serverRoundCount, countryId, gamemode }) => {
+				// reset round variables
+				setIsPaused(false)
+				setFirstPlayer(null)
+				setAnswerTime(null)
+
+				// update round count
 				setRoundCount(serverRoundCount)
+
+				// set round variables
 				setCountryId(countryId)
 				setGamemode(gamemode)
 				resetWrongAnswersCount()
 			}
 		)
+
+		socket.on("endRound", (player, time) => {
+			setIsPaused(true)
+			if (player && time) {
+				setFirstPlayer(player)
+				setAnswerTime(time)
+			}
+		})
 	}, [])
 
 	useEffect(() => {
@@ -58,9 +76,9 @@ export default function Quiz({ countriesList, defaultCountryId }: IQuizzProps) {
 		if (isPaused) {
 			return (
 				<AnswerScreen
-					playername="Toto"
+					playername={firstPlayer}
+					time={answerTime}
 					answer={expectedAnswer}
-					time="12"
 				>
 					<Question gamemode={gamemode} roundLabel={questionLabel} />
 				</AnswerScreen>
