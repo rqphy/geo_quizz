@@ -26,6 +26,7 @@ export function startNewRound(lobbyId, isNewRound) {
 		lobbies[lobbyId].lastCountriesId.push(countryId)
 
 		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
+		lobbies[lobbyId].targetDate = targetDate
 
 		io.to(lobbyId).emit("startNewRound", {
 			serverRoundCount: roundCount,

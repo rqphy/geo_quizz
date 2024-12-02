@@ -41,6 +41,7 @@ io.on("connection", (socket) => {
 			creator: socket.id,
 			roundLimit: defaultRoundLimit,
 			playersWithGoodAnswer: [],
+			targetDate: null,
 		} // Init lobby with empty user
 
 		// Emit back to the client
@@ -106,6 +107,7 @@ io.on("connection", (socket) => {
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
 		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
+		lobbies[lobbyId].targetDate = targetDate
 
 		// Start game
 		io.to(lobbyId).emit("startGame", {
@@ -117,8 +119,7 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("timerEnded", (lobbyId, playerId) => {
-		if (!lobbies[lobbyId].creator || playerId !== lobbies[lobbyId].creator)
-			return
+		if (!lobbies[lobbyId] || playerId !== lobbies[lobbyId].creator) return
 		const firstPlayer = lobbies[lobbyId].playersWithGoodAnswer[0]
 
 		io.to(lobbyId).emit(
@@ -139,9 +140,17 @@ io.on("connection", (socket) => {
 			(user) => user.uuid === playerId
 		)
 		player.score += 1 // update system
+
+		let guessTime =
+			roundDuration -
+			(lobbies[lobbyId].targetDate.getTime() - new Date().getTime()) /
+				1000
+
+		guessTime = Math.trunc(guessTime * 100) / 100
+
 		lobbies[lobbyId].playersWithGoodAnswer.push({
 			name: player.name,
-			guessTime: "12",
+			guessTime: guessTime,
 		})
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users, player)
 
