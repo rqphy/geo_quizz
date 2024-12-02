@@ -20,7 +20,7 @@ export const io = new Server({
 })
 
 export const lobbies = {}
-export const roundDuration = 20
+export const roundDuration = 10 // gotta update client side too Quiz.tsx
 const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
@@ -103,8 +103,28 @@ io.on("connection", (socket) => {
 		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
 
 		// Start game
-		io.to(lobbyId).emit("startGame", { countriesList, countryId, targetDate })
+		io.to(lobbyId).emit("startGame", {
+			countriesList,
+			countryId,
+			targetDate,
+		})
 		console.log(`Lobby ${lobbyId} started the game`)
+	})
+
+	socket.on("timerEnded", (lobbyId, playerId) => {
+		if (playerId !== lobbies[lobbyId].creator) return
+		const firstPlayer = lobbies[lobbyId].playersWithGoodAnswer[0]
+
+		io.to(lobbyId).emit(
+			"endRound",
+			firstPlayer ? firstPlayer.name : null,
+			firstPlayer ? firstPlayer.guessTime : null
+		)
+
+		// Start new round
+		setTimeout(() => {
+			startNewRound(lobbyId, true)
+		}, newRoundDelay)
 	})
 
 	socket.on("goodAnswer", (lobbyId, playerId) => {
@@ -113,7 +133,10 @@ io.on("connection", (socket) => {
 			(user) => user.uuid === playerId
 		)
 		player.score += 1 // update system
-		lobbies[lobbyId].playersWithGoodAnswer.push(player.name)
+		lobbies[lobbyId].playersWithGoodAnswer.push({
+			name: player.name,
+			guessTime: "12",
+		})
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users, player)
 
 		if (
