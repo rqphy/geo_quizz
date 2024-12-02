@@ -19,10 +19,14 @@ export function startNewRound(lobbyId, isNewRound) {
 
 		lobbies[lobbyId].lastCountriesId.push(countryId)
 
+		const roundDuration = 20
+		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
+
 		io.to(lobbyId).emit("startNewRound", {
 			serverRoundCount: roundCount,
 			countryId,
 			gamemode,
+			targetDate,
 		})
 	} else {
 		// Game end
