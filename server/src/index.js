@@ -5,6 +5,7 @@ import {
 	generateRandomCountryId,
 	startNewRound,
 	handlePlayerLeavingLobby,
+	resetScores,
 } from "./utils.js"
 
 dotenv.config()
@@ -24,7 +25,7 @@ export const roundDuration = 10 // gotta update client side too Quiz.tsx
 const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
-const newRoundDelay = 4000
+const newRoundDelay = 1000
 
 io.listen(PORT)
 
@@ -100,6 +101,10 @@ io.on("connection", (socket) => {
 			lobbies[lobbyId].lastCountriesId
 		)
 
+		// reset scores
+		resetScores(lobbyId)
+		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+
 		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
 
 		// Start game
@@ -112,7 +117,8 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on("timerEnded", (lobbyId, playerId) => {
-		if (playerId !== lobbies[lobbyId].creator) return
+		if (!lobbies[lobbyId].creator || playerId !== lobbies[lobbyId].creator)
+			return
 		const firstPlayer = lobbies[lobbyId].playersWithGoodAnswer[0]
 
 		io.to(lobbyId).emit(
@@ -144,7 +150,11 @@ io.on("connection", (socket) => {
 			lobbies[lobbyId].playersWithGoodAnswer.length
 		) {
 			const firstPlayer = lobbies[lobbyId].playersWithGoodAnswer[0]
-			io.to(lobbyId).emit("endRound", firstPlayer, "12")
+			io.to(lobbyId).emit(
+				"endRound",
+				firstPlayer.name,
+				firstPlayer.guessTime
+			)
 
 			// Start new round
 			setTimeout(() => {

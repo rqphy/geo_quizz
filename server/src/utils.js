@@ -1,5 +1,11 @@
 import { io, lobbies, roundDuration } from "./index.js"
 
+export function resetScores(lobbyId) {
+	lobbies[lobbyId].users.map((user) => {
+		user.score = 0
+	})
+}
+
 export function startNewRound(lobbyId, isNewRound) {
 	if (isNewRound) {
 		lobbies[lobbyId].round += 1
