@@ -22,7 +22,7 @@ export const io = new Server({
 
 export const lobbies = {}
 export const roundDuration = 20 // gotta update client side too Quiz.tsx
-const defaultRoundLimit = 5 // gotta update client side too
+const defaultRoundLimit = 10 // gotta update client side too LobbyForm.tsx
 const minRoundLimit = 5
 const maxRoundLimit = 40
 const newRoundDelay = 3000
