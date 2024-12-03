@@ -5,7 +5,7 @@ import {
 	generateRandomCountryId,
 	startNewRound,
 	handlePlayerLeavingLobby,
-	resetScores
+	resetScores,
 } from "./utils.js"
 
 dotenv.config()
@@ -26,6 +26,7 @@ const defaultRoundLimit = 5 // gotta update client side too
 const minRoundLimit = 5
 const maxRoundLimit = 40
 const newRoundDelay = 3000
+const maxScoreInOneGuess = 10
 
 io.listen(PORT)
 
@@ -76,7 +77,7 @@ io.on("connection", (socket) => {
 				uuid: socket.id,
 				name: username,
 				score: 0,
-				hasGuessed: false
+				hasGuessed: false,
 			})
 			io.to(lobbyId).emit("updateCreator", lobbies[lobbyId].creator)
 			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
@@ -140,13 +141,13 @@ io.on("connection", (socket) => {
 		const player = lobbies[lobbyId].users.find(
 			(user) => user.uuid === playerId
 		)
-		player.score += 1 // update system
 		player.hasGuessed = true
 
-		let guessTime =
-			roundDuration -
+		let remainingTime =
 			(lobbies[lobbyId].targetDate.getTime() - new Date().getTime()) /
-				1000
+			1000
+
+		let guessTime = roundDuration - remainingTime
 
 		guessTime = Math.trunc(guessTime * 100) / 100
 
@@ -154,6 +155,12 @@ io.on("connection", (socket) => {
 			name: player.name,
 			guessTime: guessTime,
 		})
+
+		// Update score
+		let points = (remainingTime * maxScoreInOneGuess) / roundDuration
+		points = Math.trunc(points)
+		player.score += points
+
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users, player)
 
 		if (
