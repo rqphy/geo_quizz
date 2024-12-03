@@ -43,5 +43,9 @@
 		&--guessed {
 			background-color: var(--color-valid);
 		}
+
+		&--me {
+			font-weight: 600;
+		}
 	}
 }
