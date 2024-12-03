@@ -6,10 +6,17 @@ export function resetScores(lobbyId) {
 	})
 }
 
+function resetHasGuessed(lobbyId) {
+	lobbies[lobbyId].users.map((user) => (user.hasGuessed = false))
+}
+
 export function startNewRound(lobbyId, isNewRound) {
 	if (isNewRound) {
 		lobbies[lobbyId].round += 1
 	}
+	resetHasGuessed(lobbyId)
+	io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+
 	// Update values
 	const roundCount = lobbies[lobbyId].round
 	if (roundCount <= lobbies[lobbyId].roundLimit) {

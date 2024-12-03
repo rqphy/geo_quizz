@@ -5,7 +5,7 @@ import {
 	generateRandomCountryId,
 	startNewRound,
 	handlePlayerLeavingLobby,
-	resetScores,
+	resetScores
 } from "./utils.js"
 
 dotenv.config()
@@ -76,6 +76,7 @@ io.on("connection", (socket) => {
 				uuid: socket.id,
 				name: username,
 				score: 0,
+				hasGuessed: false
 			})
 			io.to(lobbyId).emit("updateCreator", lobbies[lobbyId].creator)
 			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
@@ -140,6 +141,7 @@ io.on("connection", (socket) => {
 			(user) => user.uuid === playerId
 		)
 		player.score += 1 // update system
+		player.hasGuessed = true
 
 		let guessTime =
 			roundDuration -
