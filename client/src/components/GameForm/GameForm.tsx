@@ -1,5 +1,4 @@
 import Button from "../Button/Button"
-import useRoundCountStore from "../../stores/roundCount"
 import { useState } from "react"
 import "./gameform.scss"
 import { useParams } from "react-router-dom"
@@ -23,7 +22,6 @@ interface IGameFormProps {
 
 export default function GameForm({ expectedAnswer }: IGameFormProps) {
 	const { lobbyId } = useParams()
-	const increaseRoundCount = useRoundCountStore((state) => state.increase)
 	const [isAnimating, setIsAnimating] = useState<boolean>(false)
 	const { socket, methods } = useSocket()
 
@@ -41,12 +39,11 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 
 		if (checkAnswer(expectedAnswer, inputValue)) {
 			// tada + next round + player point
-			if(!lobbyId || !socket.id) return
+			if (!lobbyId || !socket.id) return
 			methods.goodAnswer(lobbyId, socket.id)
-			increaseRoundCount()
 		} else {
 			// emit answer
-			if(!lobbyId || !socket.id) return
+			if (!lobbyId || !socket.id) return
 			startFailAnimation()
 			methods.badAnswer(lobbyId, inputValue)
 		}
