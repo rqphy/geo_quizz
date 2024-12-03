@@ -8,7 +8,7 @@ interface ILobbyForm {
 	onSubmit: (_event: FormEvent<HTMLFormElement>) => void
 }
 
-const defaultRoundLimit = 5 // gotta update server side too
+const defaultRoundLimit = 10 // gotta update server side too
 
 export default function LobbyForm({ onSubmit }: ILobbyForm) {
 	const [roundLimit, setRoundLimit] = useState<number>(defaultRoundLimit)

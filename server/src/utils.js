@@ -1,6 +1,24 @@
-import { io, lobbies } from "./index.js"
+import { io, lobbies, roundDuration } from "./index.js"
 
-export function startNewRound(lobbyId, roundCount) {
+export function resetScores(lobbyId) {
+	lobbies[lobbyId].users.map((user) => {
+		user.score = 0
+	})
+}
+
+function resetHasGuessed(lobbyId) {
+	lobbies[lobbyId].users.map((user) => (user.hasGuessed = false))
+}
+
+export function startNewRound(lobbyId, isNewRound) {
+	if (isNewRound) {
+		lobbies[lobbyId].round += 1
+	}
+	resetHasGuessed(lobbyId)
+	io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+
+	// Update values
+	const roundCount = lobbies[lobbyId].round
 	if (roundCount <= lobbies[lobbyId].roundLimit) {
 		// Start new Round
 		const gamemode = Math.random() > 0.5 ? "findCountry" : "findCapital"
@@ -9,12 +27,19 @@ export function startNewRound(lobbyId, roundCount) {
 			lobbies[lobbyId].lastCountriesId
 		)
 
+		// reset round variables
+		lobbies[lobbyId].playersWithGoodAnswer = []
+
 		lobbies[lobbyId].lastCountriesId.push(countryId)
+
+		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
+		lobbies[lobbyId].targetDate = targetDate
 
 		io.to(lobbyId).emit("startNewRound", {
 			serverRoundCount: roundCount,
 			countryId,
 			gamemode,
+			targetDate,
 		})
 	} else {
 		// Game end

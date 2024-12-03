@@ -5,6 +5,7 @@ import {
 	generateRandomCountryId,
 	startNewRound,
 	handlePlayerLeavingLobby,
+	resetScores,
 } from "./utils.js"
 
 dotenv.config()
@@ -20,9 +21,12 @@ export const io = new Server({
 })
 
 export const lobbies = {}
-const defaultRoundLimit = 5 // gotta update client side too
+export const roundDuration = 20 // gotta update client side too Quiz.tsx
+const defaultRoundLimit = 10 // gotta update client side too LobbyForm.tsx
 const minRoundLimit = 5
 const maxRoundLimit = 40
+const newRoundDelay = 3000
+const maxScoreInOneGuess = 10
 
 io.listen(PORT)
 
@@ -37,6 +41,8 @@ io.on("connection", (socket) => {
 			users: [],
 			creator: socket.id,
 			roundLimit: defaultRoundLimit,
+			playersWithGoodAnswer: [],
+			targetDate: null,
 		} // Init lobby with empty user
 
 		// Emit back to the client
@@ -71,6 +77,7 @@ io.on("connection", (socket) => {
 				uuid: socket.id,
 				name: username,
 				score: 0,
+				hasGuessed: false,
 			})
 			io.to(lobbyId).emit("updateCreator", lobbies[lobbyId].creator)
 			console.log(`User ${socket.id} joined lobby ${lobbyId}`)
@@ -97,28 +104,85 @@ io.on("connection", (socket) => {
 			lobbies[lobbyId].lastCountriesId
 		)
 
+		// reset scores
+		resetScores(lobbyId)
+		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+
+		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
+		lobbies[lobbyId].targetDate = targetDate
+
 		// Start game
-		io.to(lobbyId).emit("startGame", { countriesList, countryId })
+		io.to(lobbyId).emit("startGame", {
+			countriesList,
+			countryId,
+			targetDate,
+		})
 		console.log(`Lobby ${lobbyId} started the game`)
 	})
 
-	socket.on("goodAnswer", (lobbyId, playerId) => {
-		// Update values
-		lobbies[lobbyId].round += 1
-		const roundCount = lobbies[lobbyId].round
+	socket.on("timerEnded", (lobbyId, playerId) => {
+		if (!lobbies[lobbyId] || playerId !== lobbies[lobbyId].creator) return
+		const firstPlayer = lobbies[lobbyId].playersWithGoodAnswer[0]
 
-		// Update score
-		lobbies[lobbyId].users.find((user) => user.uuid === playerId).score += 1
-		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+		io.to(lobbyId).emit(
+			"endRound",
+			firstPlayer ? firstPlayer.name : null,
+			firstPlayer ? firstPlayer.guessTime : null
+		)
 
 		// Start new round
-		startNewRound(lobbyId, roundCount)
+		setTimeout(() => {
+			startNewRound(lobbyId, true)
+		}, newRoundDelay)
+	})
+
+	socket.on("goodAnswer", (lobbyId, playerId) => {
+		// Update score
+		const player = lobbies[lobbyId].users.find(
+			(user) => user.uuid === playerId
+		)
+		player.hasGuessed = true
+
+		let remainingTime =
+			(lobbies[lobbyId].targetDate.getTime() - new Date().getTime()) /
+			1000
+
+		let guessTime = roundDuration - remainingTime
+
+		guessTime = Math.trunc(guessTime * 100) / 100
+
+		lobbies[lobbyId].playersWithGoodAnswer.push({
+			name: player.name,
+			guessTime: guessTime,
+		})
+
+		// Update score
+		let points = (remainingTime * maxScoreInOneGuess) / roundDuration
+		points = Math.round(points)
+		player.score += points
+
+		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users, player)
+
+		if (
+			lobbies[lobbyId].users.length ===
+			lobbies[lobbyId].playersWithGoodAnswer.length
+		) {
+			const firstPlayer = lobbies[lobbyId].playersWithGoodAnswer[0]
+			io.to(lobbyId).emit(
+				"endRound",
+				firstPlayer.name,
+				firstPlayer.guessTime
+			)
+
+			// Start new round
+			setTimeout(() => {
+				startNewRound(lobbyId, true)
+			}, newRoundDelay)
+		}
 	})
 
 	socket.on("newRound", (lobbyId) => {
-		const roundCount = lobbies[lobbyId].round
-
-		startNewRound(lobbyId, roundCount)
+		startNewRound(lobbyId, false)
 	})
 
 	socket.on("badAnswer", (lobbyId, answer) => {
