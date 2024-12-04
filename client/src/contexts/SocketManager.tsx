@@ -17,7 +17,8 @@ interface ISocketProviderMethods {
 	setupGame: (
 		lobbyId: string,
 		countriesList: ICountry[],
-		roundLimit: string
+		roundLimit: string,
+		fastmode: boolean
 	) => void
 	goodAnswer: (lobbyId: string, userId: string) => void
 	badAnswer: (lobbyId: string, answer: string) => void
@@ -84,9 +85,15 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 		setupGame(
 			lobbyId: string,
 			countriesList: ICountry[],
-			roundLimit: string
+			roundLimit: string,
+			fastmode: boolean
 		): void {
-			socket.emit("setupGame", lobbyId, countriesList, roundLimit)
+			socket.emit("setupGame", {
+				lobbyId,
+				countriesList,
+				roundLimit,
+				fastmode,
+			})
 		},
 		goodAnswer(lobbyId: string, userId: string): void {
 			socket.emit("goodAnswer", lobbyId, userId)

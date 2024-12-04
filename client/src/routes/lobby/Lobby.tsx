@@ -99,17 +99,23 @@ export default function Lobby() {
 
 	function handlePartySubmit(_event: FormEvent<HTMLFormElement>): void {
 		_event.preventDefault()
-		const submittedContinentList = new FormData(_event.currentTarget)
-		let roundLimit = submittedContinentList.get("roundLimit") ?? "20"
+		const submittedFormValues = new FormData(_event.currentTarget)
+		let roundLimit = submittedFormValues.get("roundLimit") ?? "20"
 		const tempCountriesList: ICountry[] = []
-		for (const key of [...submittedContinentList.keys()]) {
-			if (key !== "roundLimit") {
+		for (const key of [...submittedFormValues.keys()]) {
+			if (key !== "roundLimit" && key !== "fastmode") {
 				tempCountriesList.push(...continentsData[key as Region])
 			}
 		}
+		const fastmode = submittedFormValues.get("fastmode") ?? false
 
 		if (!lobbyId) return
-		methods.setupGame(lobbyId, tempCountriesList, roundLimit as string)
+		methods.setupGame(
+			lobbyId,
+			tempCountriesList,
+			roundLimit as string,
+			fastmode as boolean
+		)
 	}
 
 	function renderContent() {

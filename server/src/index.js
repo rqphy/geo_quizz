@@ -25,7 +25,8 @@ export const roundDuration = 20 // gotta update client side too Quiz.tsx
 const defaultRoundLimit = 10 // gotta update client side too LobbyForm.tsx
 const minRoundLimit = 5
 const maxRoundLimit = 40
-const newRoundDelay = 3000
+const defaultRoundDelay = 3000
+const fastRoundDelay = 1000
 const maxScoreInOneGuess = 10
 
 io.listen(PORT)
@@ -43,6 +44,7 @@ io.on("connection", (socket) => {
 			roundLimit: defaultRoundLimit,
 			playersWithGoodAnswer: [],
 			targetDate: null,
+			roundDelay: defaultRoundDelay,
 		} // Init lobby with empty user
 
 		// Emit back to the client
@@ -90,35 +92,44 @@ io.on("connection", (socket) => {
 	})
 
 	// Start game with prefered settings
-	socket.on("setupGame", (lobbyId, countriesList, roundLimit) => {
-		// Init round
-		lobbies[lobbyId].round = 1
-		lobbies[lobbyId].roundLimit = Math.min(
-			Math.max(Number(roundLimit), minRoundLimit),
-			maxRoundLimit
-		)
-		lobbies[lobbyId].countriesList = countriesList
-		lobbies[lobbyId].lastCountriesId = []
-		const countryId = generateRandomCountryId(
-			countriesList.length,
-			lobbies[lobbyId].lastCountriesId
-		)
+	socket.on(
+		"setupGame",
+		({ lobbyId, countriesList, roundLimit, fastmode }) => {
+			// Init round
+			lobbies[lobbyId].round = 1
+			lobbies[lobbyId].roundLimit = Math.min(
+				Math.max(Number(roundLimit), minRoundLimit),
+				maxRoundLimit
+			)
+			lobbies[lobbyId].countriesList = countriesList
+			lobbies[lobbyId].lastCountriesId = []
+			const countryId = generateRandomCountryId(
+				countriesList.length,
+				lobbies[lobbyId].lastCountriesId
+			)
 
-		// reset scores
-		resetScores(lobbyId)
-		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
+			if (fastmode) {
+				lobbies[lobbyId].roundDelay = fastRoundDelay
+			}
 
-		const targetDate = new Date(new Date().getTime() + roundDuration * 1000)
-		lobbies[lobbyId].targetDate = targetDate
+			// reset scores
+			resetScores(lobbyId)
+			io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
-		// Start game
-		io.to(lobbyId).emit("startGame", {
-			countriesList,
-			countryId,
-			targetDate,
-		})
-		console.log(`Lobby ${lobbyId} started the game`)
-	})
+			const targetDate = new Date(
+				new Date().getTime() + roundDuration * 1000
+			)
+			lobbies[lobbyId].targetDate = targetDate
+
+			// Start game
+			io.to(lobbyId).emit("startGame", {
+				countriesList,
+				countryId,
+				targetDate,
+			})
+			console.log(`Lobby ${lobbyId} started the game`)
+		}
+	)
 
 	socket.on("timerEnded", (lobbyId, playerId) => {
 		if (!lobbies[lobbyId] || playerId !== lobbies[lobbyId].creator) return
@@ -133,7 +144,7 @@ io.on("connection", (socket) => {
 		// Start new round
 		setTimeout(() => {
 			startNewRound(lobbyId, true)
-		}, newRoundDelay)
+		}, lobbies[lobbyId].roundDelay)
 	})
 
 	socket.on("goodAnswer", (lobbyId, playerId) => {
@@ -177,7 +188,7 @@ io.on("connection", (socket) => {
 			// Start new round
 			setTimeout(() => {
 				startNewRound(lobbyId, true)
-			}, newRoundDelay)
+			}, lobbies[lobbyId].roundDelay)
 		}
 	})
 
