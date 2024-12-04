@@ -1,5 +1,5 @@
 .lobbyform {
-	width: 300px;
+	width: 240px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -7,7 +7,7 @@
 
 	.button {
 		width: 200px;
-		margin-top: 1.5rem;
+		margin-top: 1rem;
 	}
 
 	.invite {
@@ -28,7 +28,7 @@
 	&__option {
 		position: relative;
 		width: 100%;
-		padding: 1rem 1rem;
+		padding: 0.8rem 1rem;
 		cursor: pointer;
 		user-select: none;
 
@@ -49,6 +49,25 @@
 
 		input[type="checkbox"]:checked + .option__background {
 			background-color: var(--color-tertiary);
+		}
+	}
+
+	&__fastmode {
+		display: flex;
+		box-sizing: border-box;
+		cursor: pointer;
+
+		&:hover {
+			cursor: pointer;
+		}
+
+		input {
+			padding: 0.4rem 0.5rem;
+		}
+
+		label {
+			padding: 0.4rem 0.5rem;
+			user-select: none;
 		}
 	}
 }
