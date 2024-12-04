@@ -112,7 +112,8 @@ io.on("connection", (socket) => {
 				lobbies[lobbyId].roundDelay = fastRoundDelay
 			}
 
-			// reset scores
+			// reset scores & variables
+			lobbies[lobbyId].playersWithGoodAnswer = []
 			resetScores(lobbyId)
 			io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users)
 
@@ -173,6 +174,11 @@ io.on("connection", (socket) => {
 		player.score += points
 
 		io.to(lobbyId).emit("updateUserList", lobbies[lobbyId].users, player)
+
+		console.log(
+			lobbies[lobbyId].users.length,
+			lobbies[lobbyId].playersWithGoodAnswer.length
+		)
 
 		if (
 			lobbies[lobbyId].users.length ===
