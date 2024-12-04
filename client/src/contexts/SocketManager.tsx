@@ -49,12 +49,10 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 	useEffect(() => {
 		socket.on("connect", () => {
 			setIsConnected(true)
-			console.log("Connected to server:" + socket.id)
 		})
 
 		socket.on("disconnect", () => {
 			setIsConnected(false)
-			console.log("Disconnected from server")
 		})
 
 		socket.on("updateUserList", (userList) => {
@@ -71,7 +69,6 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 	const methods = {
 		createLobby(): void {
 			socket.emit("createLobby")
-			console.log("create lobby")
 		},
 		requestLobbyAccess(lobbyId: string): void {
 			socket.emit("requestLobbyAccess", lobbyId)

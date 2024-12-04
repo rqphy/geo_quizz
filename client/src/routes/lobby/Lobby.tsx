@@ -52,7 +52,6 @@ export default function Lobby() {
 		setIsCreator(socket.id === creator)
 
 		socket.on("startGame", ({ countriesList, countryId, targetDate }) => {
-			console.log("start game", countriesList)
 			setCountriesList(countriesList)
 			setDefaultCountryId(countryId)
 			setIsGameOn(true)

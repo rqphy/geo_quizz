@@ -12,7 +12,6 @@ export default function Timer({ targetDate }: ITimerProps) {
 	const { lobbyId } = useParams()
 
 	useEffect(() => {
-		console.log(targetDate)
 		function calculateSecondsLeft() {
 			const now: Date = new Date()
 			const difference = Math.floor(
