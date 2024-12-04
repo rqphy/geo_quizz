@@ -17,7 +17,8 @@ interface ISocketProviderMethods {
 	setupGame: (
 		lobbyId: string,
 		countriesList: ICountry[],
-		roundLimit: string
+		roundLimit: string,
+		fastmode: boolean
 	) => void
 	goodAnswer: (lobbyId: string, userId: string) => void
 	badAnswer: (lobbyId: string, answer: string) => void
@@ -48,12 +49,10 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 	useEffect(() => {
 		socket.on("connect", () => {
 			setIsConnected(true)
-			console.log("Connected to server:" + socket.id)
 		})
 
 		socket.on("disconnect", () => {
 			setIsConnected(false)
-			console.log("Disconnected from server")
 		})
 
 		socket.on("updateUserList", (userList) => {
@@ -70,7 +69,6 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 	const methods = {
 		createLobby(): void {
 			socket.emit("createLobby")
-			console.log("create lobby")
 		},
 		requestLobbyAccess(lobbyId: string): void {
 			socket.emit("requestLobbyAccess", lobbyId)
@@ -84,9 +82,15 @@ export function SocketProvider({ children }: ISocketProviderProps) {
 		setupGame(
 			lobbyId: string,
 			countriesList: ICountry[],
-			roundLimit: string
+			roundLimit: string,
+			fastmode: boolean
 		): void {
-			socket.emit("setupGame", lobbyId, countriesList, roundLimit)
+			socket.emit("setupGame", {
+				lobbyId,
+				countriesList,
+				roundLimit,
+				fastmode,
+			})
 		},
 		goodAnswer(lobbyId: string, userId: string): void {
 			socket.emit("goodAnswer", lobbyId, userId)

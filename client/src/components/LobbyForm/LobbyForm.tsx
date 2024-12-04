@@ -105,6 +105,10 @@ export default function LobbyForm({ onSubmit }: ILobbyForm) {
 				step={5}
 				value={roundLimit}
 			/>
+			<div className="lobbyform__fastmode">
+				<input type="checkbox" id="fastmode" name="fastmode" />
+				<label htmlFor="fastmode">Mode rapide</label>
+			</div>
 			<Button label="Jouer" className={`${noneChecked && "disabled"}`} />
 			<Button
 				label={isCopied ? "Copié" : "Inviter"}

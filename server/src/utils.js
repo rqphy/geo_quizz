@@ -11,6 +11,7 @@ function resetHasGuessed(lobbyId) {
 }
 
 export function startNewRound(lobbyId, isNewRound) {
+	if (!lobbies[lobbyId]) return
 	if (isNewRound) {
 		lobbies[lobbyId].round += 1
 	}
