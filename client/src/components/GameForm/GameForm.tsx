@@ -68,7 +68,7 @@ export default function GameForm({ expectedAnswer }: IGameFormProps) {
 					/>
 					<Button
 						label="Valider"
-						className={`${isRight && "disabled"}`}
+						className={`gameform__button ${isRight && "disabled"}`}
 					/>
 				</>
 			)}
