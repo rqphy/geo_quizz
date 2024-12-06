@@ -1,12 +1,26 @@
+@import "../../styles/mixins.scss";
+
 .lobby {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	margin-top: 4rem;
 
+	height: 80vh;
+	max-height: -webkit-fill-available;
+
+	@include small {
+		margin: 1rem 0 0;
+		justify-content: center;
+	}
+
 	h2 {
 		font-size: 2rem;
 		font-weight: 600;
+
+		@include small {
+			font-size: 2.3rem;
+		}
 	}
 
 	&__creation,
