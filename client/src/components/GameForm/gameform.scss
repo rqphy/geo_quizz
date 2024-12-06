@@ -10,6 +10,15 @@
 		width: 100%;
 	}
 
+	&__button {
+		width: 200px;
+
+		@include small {
+			font-size: 1.5rem;
+			height: 5rem;
+		}
+	}
+
 	input {
 		width: 500px;
 		height: 3rem;
@@ -21,6 +30,11 @@
 		@include medium {
 			height: 3.5rem;
 			width: 90%;
+		}
+		@include small {
+			font-size: 1.5rem;
+			height: 5rem;
+			width: 90vw;
 		}
 	}
 
