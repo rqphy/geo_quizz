@@ -1,23 +1,4 @@
 @import "./styles/reset.scss";
-@import "./styles/mixins.scss";
 @import "./styles/fonts.scss";
 @import "./styles/vars.scss";
 @import "./styles/global.scss";
-
-@mixin small {
-	@media (max-width: 615px) {
-		@content;
-	}
-}
-
-@mixin medium {
-	@media (max-width: 789px) {
-		@content;
-	}
-}
-
-@mixin large {
-	@media (max-width: 1084px) {
-		@content;
-	}
-}

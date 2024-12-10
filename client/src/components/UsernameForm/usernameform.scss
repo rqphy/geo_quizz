@@ -1,5 +1,3 @@
-@import "../../styles/mixins.scss";
-
 .username {
 	display: flex;
 	flex-direction: column;
@@ -27,7 +25,6 @@
 
 	&__button {
 		width: 200px;
-
 	}
 
 	&__error {
