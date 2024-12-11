@@ -37,10 +37,10 @@
 	}
 
 	&__open {
+		$width: 5rem;
 		display: none;
 
 		@include small {
-			$width: 6rem;
 			position: absolute;
 			left: auto;
 			right: 2rem;
@@ -51,12 +51,17 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			background-color: tomato;
+			background-color: var(--color-primary);
 			cursor: pointer;
 			border: none;
 			border-radius: 50%;
 			pointer-events: all;
 			z-index: 5;
+
+			svg {
+				height: $width * 0.6;
+				fill: var(--color-secondary);
+			}
 		}
 	}
 
