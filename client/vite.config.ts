@@ -11,4 +11,16 @@ export default defineConfig({
 	define: {
 		"process.env": process.env,
 	},
+	css: {
+		preprocessorOptions: {
+			scss: {
+				additionalData: `@import "@/styles/mixins.scss";`,
+			},
+		},
+	},
+	resolve: {
+		alias: {
+			"@": "/src", // Allows using `@` for the `src` directory
+		},
+	},
 })
